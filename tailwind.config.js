@@ -2,10 +2,16 @@
 module.exports = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}"
+    "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      screens: {
+        xs: "30rem",   // 480px
+        "2xl": "100rem", // 1600px
+        "3xl": "120rem", // 1920px
+      },
+    },
   },
   plugins: [],
 }

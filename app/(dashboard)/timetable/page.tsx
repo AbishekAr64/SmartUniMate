@@ -42,7 +42,7 @@ export default function TimetablePage() {
 
           {/* Slot rows */}
           {SLOTS.map((slot, si) => (
-            <>
+            <div key={slot} className="grid gap-1" >
               <div key={slot} className="flex items-center justify-center text-xs
                 text-stone-400 font-medium bg-stone-50 dark:bg-stone-800 rounded-lg py-2">
                 {slot}
@@ -65,7 +65,7 @@ export default function TimetablePage() {
                   </div>
                 )
               })}
-            </>
+            </div>
           ))}
         </div>
       </div>

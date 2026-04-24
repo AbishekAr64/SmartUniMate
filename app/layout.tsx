@@ -1,8 +1,7 @@
 import type { Metadata } from 'next'
 import { DM_Sans, Playfair_Display } from 'next/font/google'
-import './globals.css'
-import Sidebar from '../components/Sidebar'
-import Header from '../components/Header'
+// @ts-ignore: Next.js supports side-effect CSS imports in app router
+import "./globals.css"
 
 const dmSans = DM_Sans({ subsets: ['latin'], variable: '--font-dm-sans' })
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' })
@@ -20,19 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${dmSans.variable} ${playfair.variable} font-sans`}>
-
-        {/* Header */}
-        <Header />
-
-        {/* Layout */}
-        <div className="flex">
-          <Sidebar />
-
-          <main className="flex-1 p-5">
-            {children}
-          </main>
-        </div>
-
+        {children}
       </body>
     </html>
   )
