@@ -12,7 +12,6 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  // Mock user data
   const mockUser = {
     email: 'admin@smartuni.com',
     password: '123456'
@@ -27,7 +26,6 @@ export default function LoginPage() {
       setLoading(false)
 
       if (email === mockUser.email && password === mockUser.password) {
-        // mock success login
         router.push('/')
       } else {
         setError('Invalid email or password')
@@ -36,37 +34,37 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-stone-50 dark:bg-stone-950 px-4">
-      <div className="w-full max-w-md bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl shadow-lg p-6">
+    <div className="min-h-screen flex items-center justify-center bg-stone-50 dark:bg-stone-950 px-3 sm:px-4">
+      <div className="w-full max-w-sm sm:max-w-md bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl shadow-lg p-4 sm:p-6">
 
         {/* Header */}
-        <div className="text-center mb-6">
+        <div className="text-center mb-5 sm:mb-6">
           <div className="flex justify-center mb-3">
-            <div className="p-3 rounded-full bg-red-50 dark:bg-red-950/40">
-              <User size={28} color="#800000" />
+            <div className="p-2 sm:p-3 rounded-full bg-red-50 dark:bg-red-950/40">
+              <User size={24} className="sm:w-7 sm:h-7" color="#800000" />
             </div>
           </div>
-          <h1 className="text-xl font-bold text-stone-800 dark:text-stone-100">
+          <h1 className="text-lg sm:text-xl font-bold text-stone-800 dark:text-stone-100">
             Smart Uni Mate Login
           </h1>
-          <p className="text-xs text-stone-500 mt-1">
+          <p className="text-[11px] sm:text-xs text-stone-500 mt-1">
             Sign in to continue
           </p>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-3 sm:space-y-4">
 
           {/* Email */}
           <div>
-            <label className="text-xs text-stone-600 dark:text-stone-300">
+            <label className="text-[11px] sm:text-xs text-stone-600 dark:text-stone-300">
               Email
             </label>
-            <div className="flex items-center mt-1 gap-2 px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800">
+            <div className="flex items-center mt-1 gap-2 px-2 sm:px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800">
               <User size={16} />
               <input
                 type="email"
-                className="w-full bg-transparent outline-none text-sm"
+                className="w-full bg-transparent outline-none text-xs sm:text-sm"
                 placeholder="admin@smartuni.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -76,14 +74,14 @@ export default function LoginPage() {
 
           {/* Password */}
           <div>
-            <label className="text-xs text-stone-600 dark:text-stone-300">
+            <label className="text-[11px] sm:text-xs text-stone-600 dark:text-stone-300">
               Password
             </label>
-            <div className="flex items-center mt-1 gap-2 px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800">
+            <div className="flex items-center mt-1 gap-2 px-2 sm:px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800">
               <Lock size={16} />
               <input
                 type="password"
-                className="w-full bg-transparent outline-none text-sm"
+                className="w-full bg-transparent outline-none text-xs sm:text-sm"
                 placeholder="123456"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -93,14 +91,14 @@ export default function LoginPage() {
 
           {/* Error */}
           {error && (
-            <p className="text-xs text-red-500">{error}</p>
+            <p className="text-[11px] sm:text-xs text-red-500">{error}</p>
           )}
 
           {/* Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 bg-[#800000] hover:bg-[#660000] text-white text-sm py-2.5 rounded-xl transition disabled:opacity-60"
+            className="w-full flex items-center justify-center gap-2 bg-[#800000] hover:bg-[#660000] text-white text-xs sm:text-sm py-2.5 rounded-xl transition disabled:opacity-60"
           >
             <LogIn size={16} />
             {loading ? 'Logging in...' : 'Login'}
@@ -108,7 +106,7 @@ export default function LoginPage() {
         </form>
 
         {/* Footer hint */}
-        <p className="text-[11px] text-center text-stone-500 mt-4">
+        <p className="text-[10px] sm:text-[11px] text-center text-stone-500 mt-4">
           Demo: admin@smartuni.com / 123456
         </p>
       </div>
