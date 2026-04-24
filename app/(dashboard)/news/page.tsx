@@ -108,7 +108,6 @@ const filters: { label: string; value: Category; icon: string }[] = [
 ];
 
 const PRIMARY = "#7f1d1d";
-const PRIMARY_LIGHT = "#fef2f2";
 const PRIMARY_MID = "#b91c1c";
 
 const News = () => {
@@ -128,7 +127,7 @@ const News = () => {
     <div style={{ padding: "28px 32px", fontFamily: "'DM Sans', 'Segoe UI', sans-serif", background: "#fafafa", minHeight: "100vh" }}>
 
       {/* PAGE HEADER */}
-      <div style={{ marginBottom: 24 }}>
+      <div style={{ marginBottom: 20 }}>
         <h1 style={{ fontSize: 22, fontWeight: 700, color: PRIMARY, margin: 0, letterSpacing: "-0.3px" }}>
           University News & Announcements
         </h1>
@@ -137,8 +136,44 @@ const News = () => {
         </p>
       </div>
 
+      {/* FILTER TABS — wraps to next line instead of scrolling */}
+      <div style={{
+        display: "flex",
+        flexWrap: "wrap",          /* ← wrap instead of scroll */
+        gap: 0,
+        borderBottom: "2px solid #f3f4f6",
+        marginBottom: 0,
+      }}>
+        {filters.map((f) => {
+          const isActive = activeFilter === f.value;
+          return (
+            <button
+              key={f.value}
+              onClick={() => setActiveFilter(f.value)}
+              style={{
+                display: "flex", alignItems: "center", gap: 6,
+                padding: "9px 14px",
+                border: "none", background: "transparent",
+                fontFamily: "inherit", fontSize: 13,
+                fontWeight: isActive ? 600 : 400,
+                color: isActive ? PRIMARY : "#6b7280",
+                cursor: "pointer", whiteSpace: "nowrap",
+                borderBottom: isActive ? `2px solid ${PRIMARY}` : "2px solid transparent",
+                marginBottom: "-2px",
+                transition: "all 0.12s",
+              }}
+              onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.color = PRIMARY; }}
+              onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.color = "#6b7280"; }}
+            >
+              <span style={{ fontSize: 14 }}>{f.icon}</span>
+              {f.label}
+            </button>
+          );
+        })}
+      </div>
+
       {/* SEARCH BAR */}
-      <div style={{ display: "flex", gap: 10, marginBottom: 24 }}>
+      <div style={{ display: "flex", gap: 10, margin: "16px 0 20px" }}>
         <div style={{ flex: 1, position: "relative" }}>
           <span style={{
             position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)",
@@ -173,190 +208,138 @@ const News = () => {
             fontFamily: "inherit",
             letterSpacing: "0.3px",
           }}
-          onMouseEnter={(e) => ((e.currentTarget.style.background = PRIMARY_MID))}
-          onMouseLeave={(e) => ((e.currentTarget.style.background = PRIMARY))}
+          onMouseEnter={(e) => (e.currentTarget.style.background = PRIMARY_MID)}
+          onMouseLeave={(e) => (e.currentTarget.style.background = PRIMARY)}
         >
           Search
         </button>
       </div>
 
-      <div style={{ display: "flex", gap: 20, alignItems: "flex-start" }}>
+      {/* CONTENT AREA */}
+      <div>
 
-        {/* FILTER SIDEBAR */}
-        <div style={{
-          width: 170, flexShrink: 0,
-          background: "#fff",
-          border: "1.5px solid #f3f4f6",
-          borderRadius: 10,
-          padding: "8px 6px",
-          boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
-        }}>
-          <p style={{
-            fontSize: 10, color: "#9ca3af", letterSpacing: "1.5px",
-            textTransform: "uppercase", padding: "6px 10px 10px",
-            margin: 0, fontWeight: 600,
+        {/* FEATURED CARD */}
+        {(activeFilter === "all" || activeFilter === "academic") && search === "" && (
+          <div style={{
+            background: "#fff",
+            borderRadius: 12,
+            overflow: "hidden",
+            marginBottom: 16,
+            border: "1.5px solid #f3f4f6",
+            boxShadow: "0 2px 10px rgba(127,29,29,0.07)",
           }}>
-            Filter
-          </p>
-          {filters.map((f) => {
-            const isActive = activeFilter === f.value;
-            return (
-              <button
-                key={f.value}
-                onClick={() => setActiveFilter(f.value)}
-                style={{
-                  display: "flex", alignItems: "center", gap: 8,
-                  width: "100%", padding: "9px 10px",
-                  border: "none", borderRadius: 7,
-                  background: isActive ? PRIMARY_LIGHT : "transparent",
-                  color: isActive ? PRIMARY : "#374151",
-                  fontWeight: isActive ? 600 : 400,
-                  fontSize: 13, cursor: "pointer",
-                  textAlign: "left", marginBottom: 2,
-                  fontFamily: "inherit",
-                  borderLeft: isActive ? `3px solid ${PRIMARY}` : "3px solid transparent",
-                  transition: "all 0.12s",
-                }}
-                onMouseEnter={(e) => {
-                  if (!isActive) e.currentTarget.style.background = "#f9fafb";
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive) e.currentTarget.style.background = "transparent";
-                }}
-              >
-                <span style={{ fontSize: 14 }}>{f.icon}</span>
-                {f.label}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* CONTENT AREA */}
-        <div style={{ flex: 1, minWidth: 0 }}>
-
-          {/* FEATURED CARD */}
-          {(activeFilter === "all" || activeFilter === "academic") && search === "" && (
             <div style={{
-              background: "#fff",
-              borderRadius: 12,
+              height: 190,
+              background: `linear-gradient(135deg, ${PRIMARY} 0%, #b91c1c 50%, #dc2626 100%)`,
+              position: "relative",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
               overflow: "hidden",
-              marginBottom: 16,
-              border: "1.5px solid #f3f4f6",
-              boxShadow: "0 2px 10px rgba(127,29,29,0.07)",
             }}>
               <div style={{
-                height: 190,
-                background: `linear-gradient(135deg, ${PRIMARY} 0%, #b91c1c 50%, #dc2626 100%)`,
-                position: "relative",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                overflow: "hidden",
+                position: "absolute", width: 300, height: 300, borderRadius: "50%",
+                border: "60px solid rgba(255,255,255,0.05)", top: -80, right: -60,
+              }} />
+              <div style={{
+                position: "absolute", width: 200, height: 200, borderRadius: "50%",
+                border: "40px solid rgba(255,255,255,0.06)", bottom: -80, left: 40,
+              }} />
+              <span style={{ fontSize: 64, opacity: 0.25, position: "relative", zIndex: 1 }}>🎓</span>
+              <div style={{
+                position: "absolute", top: 14, left: 14,
+                background: "#fef08a", color: "#713f12",
+                fontSize: 11, fontWeight: 700, letterSpacing: "0.5px",
+                padding: "4px 10px", borderRadius: 5,
+                display: "flex", alignItems: "center", gap: 4,
               }}>
-                <div style={{
-                  position: "absolute", width: 300, height: 300, borderRadius: "50%",
-                  border: "60px solid rgba(255,255,255,0.05)", top: -80, right: -60,
-                }} />
-                <div style={{
-                  position: "absolute", width: 200, height: 200, borderRadius: "50%",
-                  border: "40px solid rgba(255,255,255,0.06)", bottom: -80, left: 40,
-                }} />
-                <span style={{ fontSize: 64, opacity: 0.25, position: "relative", zIndex: 1 }}>🎓</span>
-                <div style={{
-                  position: "absolute", top: 14, left: 14,
-                  background: "#fef08a", color: "#713f12",
-                  fontSize: 11, fontWeight: 700, letterSpacing: "0.5px",
-                  padding: "4px 10px", borderRadius: 5,
-                  display: "flex", alignItems: "center", gap: 4,
-                }}>
-                  ⭐ FEATURED
-                </div>
-              </div>
-              <div style={{ padding: "20px 22px 22px" }}>
-                <h2 style={{ fontSize: 16, fontWeight: 700, color: "#111827", margin: "0 0 10px", lineHeight: 1.4 }}>
-                  Sabaragamuwa University Launches Smart Campus Initiative 2026
-                </h2>
-                <p style={{ fontSize: 13.5, color: "#6b7280", lineHeight: 1.65, margin: "0 0 14px" }}>
-                  The university has officially launched its Smart Campus 2026 initiative, introducing digital systems across all faculties including smart attendance, AI-assisted learning, and upgraded Wi-Fi in all lecture halls and hostels in Belihuloya.
-                </p>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-                  <span style={{
-                    background: "#eff6ff", color: "#1e40af",
-                    border: "1px solid #93c5fd",
-                    fontSize: 10.5, fontWeight: 700, padding: "2px 9px", borderRadius: 4,
-                  }}>Academic</span>
-                  <span style={{ fontSize: 12, color: "#9ca3af" }}>
-                    📅 March 1, 2026 · University Administration
-                  </span>
-                </div>
+                ⭐ FEATURED
               </div>
             </div>
-          )}
+            <div style={{ padding: "20px 22px 22px" }}>
+              <h2 style={{ fontSize: 16, fontWeight: 700, color: "#111827", margin: "0 0 10px", lineHeight: 1.4 }}>
+                Sabaragamuwa University Launches Smart Campus Initiative 2026
+              </h2>
+              <p style={{ fontSize: 13.5, color: "#6b7280", lineHeight: 1.65, margin: "0 0 14px" }}>
+                The university has officially launched its Smart Campus 2026 initiative, introducing digital systems across all faculties including smart attendance, AI-assisted learning, and upgraded Wi-Fi in all lecture halls and hostels in Belihuloya.
+              </p>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                <span style={{
+                  background: "#eff6ff", color: "#1e40af",
+                  border: "1px solid #93c5fd",
+                  fontSize: 10.5, fontWeight: 700, padding: "2px 9px", borderRadius: 4,
+                }}>Academic</span>
+                <span style={{ fontSize: 12, color: "#9ca3af" }}>
+                  📅 March 1, 2026 · University Administration
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
 
-          {/* NEWS LIST */}
-          {filtered.length > 0 ? (
-            filtered.map((item) => (
-              <div
-                key={item.id}
-                style={{
-                  background: "#fff",
-                  borderRadius: 10,
-                  overflow: "hidden",
-                  marginBottom: 12,
-                  border: "1.5px solid #f3f4f6",
-                  display: "flex",
-                  cursor: "pointer",
-                  boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
-                  transition: "box-shadow 0.15s, transform 0.15s",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = "0 4px 16px rgba(127,29,29,0.1)";
-                  e.currentTarget.style.transform = "translateY(-1px)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = "0 1px 4px rgba(0,0,0,0.04)";
-                  e.currentTarget.style.transform = "translateY(0)";
-                }}
-              >
-                <div style={{
-                  width: 120, flexShrink: 0,
-                  background: item.accent + "18",
-                  borderRight: `3px solid ${item.accent}30`,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 30, minHeight: 100,
-                }}>
-                  {item.icon}
-                </div>
-                <div style={{ padding: "14px 18px", display: "flex", flexDirection: "column", justifyContent: "center", gap: 6 }}>
-                  <div>
-                    <span style={{ ...item.badgeStyle, fontSize: 10.5, fontWeight: 700, padding: "2px 8px", borderRadius: 4 }}>
-                      {item.badge}
-                    </span>
-                  </div>
-                  <h3 style={{ fontSize: 13.5, fontWeight: 600, color: "#111827", margin: 0, lineHeight: 1.4 }}>
-                    {item.title}
-                  </h3>
-                  <p style={{ fontSize: 12.5, color: "#6b7280", margin: 0, lineHeight: 1.5 }}>
-                    {item.description}
-                  </p>
-                  <span style={{ fontSize: 11.5, color: "#9ca3af" }}>
-                    📅 {item.date} · {item.source}
+        {/* NEWS LIST */}
+        {filtered.length > 0 ? (
+          filtered.map((item) => (
+            <div
+              key={item.id}
+              style={{
+                background: "#fff",
+                borderRadius: 10,
+                overflow: "hidden",
+                marginBottom: 12,
+                border: "1.5px solid #f3f4f6",
+                display: "flex",
+                cursor: "pointer",
+                boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
+                transition: "box-shadow 0.15s, transform 0.15s",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = "0 4px 16px rgba(127,29,29,0.1)";
+                e.currentTarget.style.transform = "translateY(-1px)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = "0 1px 4px rgba(0,0,0,0.04)";
+                e.currentTarget.style.transform = "translateY(0)";
+              }}
+            >
+              <div style={{
+                width: 120, flexShrink: 0,
+                background: item.accent + "18",
+                borderRight: `3px solid ${item.accent}30`,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontSize: 30, minHeight: 100,
+              }}>
+                {item.icon}
+              </div>
+              <div style={{ padding: "14px 18px", display: "flex", flexDirection: "column", justifyContent: "center", gap: 6 }}>
+                <div>
+                  <span style={{ ...item.badgeStyle, fontSize: 10.5, fontWeight: 700, padding: "2px 8px", borderRadius: 4 }}>
+                    {item.badge}
                   </span>
                 </div>
+                <h3 style={{ fontSize: 13.5, fontWeight: 600, color: "#111827", margin: 0, lineHeight: 1.4 }}>
+                  {item.title}
+                </h3>
+                <p style={{ fontSize: 12.5, color: "#6b7280", margin: 0, lineHeight: 1.5 }}>
+                  {item.description}
+                </p>
+                <span style={{ fontSize: 11.5, color: "#9ca3af" }}>
+                  📅 {item.date} · {item.source}
+                </span>
               </div>
-            ))
-          ) : (
-            <div style={{
-              textAlign: "center", padding: "60px 20px",
-              color: "#9ca3af", background: "#fff",
-              borderRadius: 10, border: "1.5px solid #f3f4f6",
-            }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}>📭</div>
-              <div style={{ fontSize: 14, fontWeight: 500 }}>No news found for this filter.</div>
-              <div style={{ fontSize: 13, marginTop: 4 }}>Try selecting a different category or clearing your search.</div>
             </div>
-          )}
-        </div>
+          ))
+        ) : (
+          <div style={{
+            textAlign: "center", padding: "60px 20px",
+            color: "#9ca3af", background: "#fff",
+            borderRadius: 10, border: "1.5px solid #f3f4f6",
+          }}>
+            <div style={{ fontSize: 40, marginBottom: 12 }}>📭</div>
+            <div style={{ fontSize: 14, fontWeight: 500 }}>No news found for this filter.</div>
+            <div style={{ fontSize: 13, marginTop: 4 }}>Try selecting a different category or clearing your search.</div>
+          </div>
+        )}
       </div>
     </div>
   );
