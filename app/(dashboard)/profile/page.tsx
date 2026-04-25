@@ -3,11 +3,7 @@ import { useState } from "react";
 
 type Tab = "profile" | "posts" | "chat" | "notifications" | "settings";
 
-const PRIMARY = "#7f1d1d";
-const PRIMARY_LIGHT = "#fef2f2";
-const PRIMARY_MID = "#b91c1c";
-
-const TABS: { label: string; value: Tab; icon: string }[] = [
+const TABS = [
   { label: "My Profile", value: "profile", icon: "👤" },
   { label: "My Posts", value: "posts", icon: "📝" },
   { label: "Chat History", value: "chat", icon: "💬" },
@@ -16,203 +12,145 @@ const TABS: { label: string; value: Tab; icon: string }[] = [
 ];
 
 const RECENT_POSTS = [
-  { id: 1, title: "Tips for the IS2030 Database Assignment 📁", category: "Academic", categoryStyle: { background: "#faf5ff", color: "#6b21a8", border: "1px solid #d8b4fe" }, time: "Yesterday" },
-  { id: 2, title: "Best places to print project reports near campus 🖨️", category: "Campus Life", categoryStyle: { background: "#f0fdf4", color: "#166534", border: "1px solid #86efac" }, time: "3 days ago" },
-  { id: 3, title: "Anyone joining the IEEE recruitment drive? 🎉", category: "Clubs & Events", categoryStyle: { background: "#eff6ff", color: "#1e40af", border: "1px solid #93c5fd" }, time: "5 days ago" },
+  { id: 1, title: "Tips for the IS2030 Database Assignment 📁", category: "Academic", time: "Yesterday" },
+  { id: 2, title: "Best places to print project reports near campus 🖨️", category: "Campus Life", time: "3 days ago" },
+  { id: 3, title: "Anyone joining the IEEE recruitment drive? 🎉", category: "Clubs & Events", time: "5 days ago" },
 ];
 
 const NOTIFICATIONS = [
-  { id: 1, icon: "🔥", text: "K.D. Perera liked your post \"Tips for IS2030 Database Assignment\"", time: "2 hours ago", unread: true },
-  { id: 2, icon: "💬", text: "T.N. Bandara commented on your post: \"Thanks so much, this really helped!\"", time: "5 hours ago", unread: true },
+  { id: 1, icon: "🔥", text: "K.D. Perera liked your post", time: "2 hours ago", unread: true },
+  { id: 2, icon: "💬", text: "T.N. Bandara commented on your post", time: "5 hours ago", unread: true },
   { id: 3, icon: "📢", text: "New announcement: Mid-Semester Exam Timetable released.", time: "1 day ago", unread: false },
-  { id: 4, icon: "🔥", text: "R.M. Gunasekara liked your post \"Best places to print near campus\"", time: "2 days ago", unread: false },
 ];
 
 const CHAT_HISTORY = [
-  { id: 1, query: "What are the GPA requirements for Dean's List?", reply: "To qualify for the Dean's List at SUSL, you typically need a GPA of 3.7 or above with no failed modules.", time: "Today, 10:42 AM" },
-  { id: 2, query: "When is the deadline for Semester 3 module registration?", reply: "Semester 3 module registration closes on March 10, 2026. Visit the Academic Affairs portal to complete registration.", time: "Yesterday, 3:15 PM" },
-  { id: 3, query: "How do I apply for a hostel room transfer?", reply: "Submit a Room Transfer Request form at the Student Affairs office. Requests are reviewed at the start of each semester.", time: "3 days ago, 9:00 AM" },
+  { id: 1, query: "What are the GPA requirements for Dean's List?", reply: "You need GPA 3.7 or above.", time: "Today, 10:42 AM" },
+  { id: 2, query: "When is the deadline for Semester 3 module registration?", reply: "March 10, 2026.", time: "Yesterday, 3:15 PM" },
 ];
 
 export default function Profile() {
   const [activeTab, setActiveTab] = useState<Tab>("profile");
   const [editing, setEditing] = useState(false);
+
   const [form, setForm] = useState({
     name: "R. Abishek",
     index: "22FIS0580",
     email: "22fis0580@ms.sab.ac.lk",
-    mobile: "075-3304697",
+    mobile: "0753304697",
     faculty: "Faculty of Computing",
     department: "Computing & Information Systems",
     year: "Year 2 · Semester 1",
-    hostel: "Block B, Room 214, Belihuloya",
+    hostel: "Block B, Room 214",
   });
+
   const [draft, setDraft] = useState({ ...form });
 
   const field = (label: string, key: keyof typeof form, readOnly = false) => (
-    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-      <label style={{ fontSize: 10, fontWeight: 600, color: "#9ca3af", letterSpacing: "1.2px", textTransform: "uppercase" }}>
+    <div className="flex flex-col gap-1">
+      <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
         {label}
       </label>
       <input
         value={editing ? draft[key] : form[key]}
         readOnly={!editing || readOnly}
         onChange={(e) => setDraft((d) => ({ ...d, [key]: e.target.value }))}
-        style={{
-          padding: "10px 14px",
-          border: `1.5px solid ${editing && !readOnly ? PRIMARY_MID : "#e5e7eb"}`,
-          borderRadius: 8,
-          fontSize: 13.5,
-          color: readOnly ? "#9ca3af" : "#111827",
-          background: readOnly ? "#f9fafb" : editing ? "#fff" : "#fafafa",
-          fontFamily: "inherit",
-          outline: "none",
-          cursor: readOnly ? "default" : editing ? "text" : "default",
-          transition: "border 0.12s",
-        }}
+        className={`px-4 py-2 rounded-lg border text-sm outline-none ${
+          readOnly
+            ? "bg-gray-50 text-gray-400 border-gray-200"
+            : editing
+            ? "bg-white border-red-700"
+            : "bg-gray-50 border-gray-200"
+        }`}
       />
     </div>
   );
 
   return (
-    <div style={{ padding: "28px 32px", fontFamily: "'DM Sans','Segoe UI',sans-serif", background: "#fafafa", minHeight: "100vh" }}>
-
-      {/* PAGE HEADER */}
-      <div style={{ marginBottom: 20 }}>
-        <h1 style={{ fontSize: 22, fontWeight: 700, color: PRIMARY, margin: 0, letterSpacing: "-0.3px" }}>
-          Profile
-        </h1>
-        <p style={{ fontSize: 13, color: "#9ca3af", margin: "4px 0 0" }}>
-          Manage your account and preferences
-        </p>
+    <div className="min-h-screen bg-gray-50 p-3 sm:p-4 md:p-6 lg:p-8 font-sans">
+      {/* Header */}
+      <div className="mb-4 sm:mb-5">
+        <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-red-900">Profile</h1>
+        <p className="text-xs sm:text-sm text-gray-400">Manage your account and preferences</p>
       </div>
 
-      {/* TABS */}
-      <div style={{
-        display: "flex", flexWrap: "wrap", gap: 0,
-        borderBottom: "2px solid #f3f4f6", marginBottom: 24,
-      }}>
+      {/* Tabs - scrollable on mobile */}
+      <div className="flex gap-2 border-b border-gray-200 pb-2 mb-4 sm:mb-6 overflow-x-auto pb-3 -mx-3 px-3 sm:px-0 sm:flex-wrap">
         {TABS.map((t) => {
           const isActive = activeTab === t.value;
           return (
             <button
               key={t.value}
-              onClick={() => setActiveTab(t.value)}
-              style={{
-                display: "flex", alignItems: "center", gap: 6,
-                padding: "9px 14px", border: "none", background: "transparent",
-                fontFamily: "inherit", fontSize: 13,
-                fontWeight: isActive ? 600 : 400,
-                color: isActive ? PRIMARY : "#6b7280",
-                cursor: "pointer", whiteSpace: "nowrap",
-                borderBottom: isActive ? `2px solid ${PRIMARY}` : "2px solid transparent",
-                marginBottom: "-2px", transition: "all 0.12s",
-              }}
-              onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.color = PRIMARY; }}
-              onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.color = "#6b7280"; }}
+              onClick={() => setActiveTab(t.value as Tab)}
+              className={`px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm transition whitespace-nowrap ${
+                isActive
+                  ? "bg-red-900 text-white"
+                  : "bg-white border text-gray-600"
+              }`}
             >
-              <span style={{ fontSize: 14 }}>{t.icon}</span>
-              {t.label}
+              {t.icon} {t.label}
             </button>
           );
         })}
       </div>
 
-      {/* ── MY PROFILE TAB ── */}
+      {/* Profile Tab */}
       {activeTab === "profile" && (
-        <div>
-          {/* PROFILE HEADER CARD */}
-          <div style={{
-            background: "#fff", borderRadius: 12,
-            border: "1.5px solid #f3f4f6",
-            boxShadow: "0 2px 10px rgba(127,29,29,0.06)",
-            padding: "24px 28px", marginBottom: 20,
-            display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap",
-          }}>
-            {/* Avatar */}
-            <div style={{
-              width: 90, height: 90, borderRadius: "50%", flexShrink: 0,
-              background: `linear-gradient(135deg, ${PRIMARY}22, #dc262622)`,
-              border: `3px solid ${PRIMARY}30`,
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: 48,
-            }}>🧑‍🎓</div>
+        <>
+          {/* Profile Card */}
+          <div className="bg-white rounded-xl shadow-sm p-3 sm:p-4 md:p-6 flex flex-col lg:flex-row gap-4 sm:gap-6 mb-4 sm:mb-5">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full bg-red-100 flex items-center justify-center text-3xl sm:text-4xl md:text-5xl mx-auto lg:mx-0">
+              🧑‍🎓
+            </div>
 
-            {/* Info */}
-            <div style={{ flex: 1, minWidth: 180 }}>
-              <h2 style={{ fontSize: 20, fontWeight: 700, color: "#111827", margin: "0 0 4px" }}>
-                {form.name}
-              </h2>
-              <p style={{ fontSize: 13, color: "#6b7280", margin: "0 0 2px" }}>
+            <div className="flex-1 text-center lg:text-left">
+              <h2 className="text-base sm:text-lg md:text-xl font-bold text-gray-900">{form.name}</h2>
+              <p className="text-xs sm:text-sm text-gray-600">
                 Index: {form.index} · {form.department}
               </p>
-              <p style={{ fontSize: 13, color: "#9ca3af", margin: 0 }}>
-                {form.year.split("·")[0].trim()} · {form.faculty} · Sabaragamuwa University of Sri Lanka
+              <p className="text-xs sm:text-sm text-gray-400">
+                {form.year} · {form.faculty}
               </p>
-              <div style={{ display: "flex", gap: 8, marginTop: 14, flexWrap: "wrap" }}>
+
+              <div className="flex flex-wrap gap-2 mt-3 sm:mt-4 justify-center lg:justify-start">
                 <button
-                  onClick={() => { setEditing(!editing); if (editing) setForm({ ...draft }); }}
-                  style={{
-                    padding: "8px 18px", background: editing ? PRIMARY : PRIMARY,
-                    color: "#fff", border: "none", borderRadius: 8,
-                    fontSize: 13, fontWeight: 600, cursor: "pointer",
-                    fontFamily: "inherit", display: "flex", alignItems: "center", gap: 6,
-                    transition: "background 0.12s",
+                  onClick={() => {
+                    if (editing) setForm({ ...draft });
+                    setEditing(!editing);
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = PRIMARY_MID)}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = PRIMARY)}
+                  className="bg-red-900 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm"
                 >
-                  ✏️ {editing ? "Save Profile" : "Edit Profile"}
+                  ✏️ {editing ? "Save" : "Edit"}
                 </button>
+
                 {editing && (
                   <button
-                    onClick={() => { setEditing(false); setDraft({ ...form }); }}
-                    style={{
-                      padding: "8px 18px", background: "#fff",
-                      color: "#6b7280", border: "1.5px solid #e5e7eb",
-                      borderRadius: 8, fontSize: 13, fontWeight: 500,
-                      cursor: "pointer", fontFamily: "inherit",
+                    onClick={() => {
+                      setEditing(false);
+                      setDraft({ ...form });
                     }}
+                    className="border px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm"
                   >
                     Cancel
                   </button>
                 )}
-                <button
-                  style={{
-                    padding: "8px 18px", background: "#fff",
-                    color: "#374151", border: "1.5px solid #e5e7eb",
-                    borderRadius: 8, fontSize: 13, fontWeight: 500,
-                    cursor: "pointer", fontFamily: "inherit",
-                    display: "flex", alignItems: "center", gap: 6,
-                    transition: "border-color 0.12s",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.borderColor = PRIMARY)}
-                  onMouseLeave={(e) => (e.currentTarget.style.borderColor = "#e5e7eb")}
-                >
-                  🖼️ Change Photo
-                </button>
               </div>
             </div>
 
-            {/* Stats */}
-            <div style={{ display: "flex", gap: 28, flexShrink: 0 }}>
-              {[{ label: "Posts", value: 7 }, { label: "Questions", value: 24 }, { label: "Comments", value: 31 }].map((s) => (
-                <div key={s.label} style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: 24, fontWeight: 700, color: PRIMARY }}>{s.value}</div>
-                  <div style={{ fontSize: 11, color: "#9ca3af", letterSpacing: "0.5px", textTransform: "uppercase", marginTop: 2 }}>{s.label}</div>
+            <div className="flex gap-3 sm:gap-6 justify-center lg:justify-start">
+              {["Posts", "Questions", "Comments"].map((s, i) => (
+                <div key={i} className="text-center">
+                  <div className="text-lg sm:text-2xl font-bold text-red-900">
+                    {[7, 24, 31][i]}
+                  </div>
+                  <div className="text-[10px] sm:text-xs text-gray-400 uppercase">{s}</div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* FORM FIELDS */}
-          <div style={{
-            background: "#fff", borderRadius: 12,
-            border: "1.5px solid #f3f4f6",
-            boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
-            padding: "24px 28px", marginBottom: 20,
-          }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
+          {/* Form */}
+          <div className="bg-white rounded-xl shadow-sm p-3 sm:p-4 md:p-6 mb-4 sm:mb-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               {field("Full Name", "name")}
               {field("Index Number", "index", true)}
               {field("University Email", "email", true)}
@@ -224,168 +162,80 @@ export default function Profile() {
             </div>
           </div>
 
-          {/* RECENT POSTS */}
-          <div style={{
-            background: "#fff", borderRadius: 12,
-            border: "1.5px solid #f3f4f6",
-            boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
-            padding: "20px 24px",
-          }}>
-            <p style={{ fontSize: 10, fontWeight: 600, color: "#9ca3af", letterSpacing: "1.5px", textTransform: "uppercase", margin: "0 0 14px" }}>
+          {/* Recent Posts */}
+          <div className="bg-white rounded-xl shadow-sm p-3 sm:p-4 md:p-6">
+            <p className="text-xs uppercase tracking-wider text-gray-400 mb-3 sm:mb-4">
               My Recent Posts
             </p>
-            {RECENT_POSTS.map((p, i) => (
+            {RECENT_POSTS.map((p) => (
               <div
                 key={p.id}
-                style={{
-                  display: "flex", alignItems: "center", justifyContent: "space-between",
-                  padding: "12px 0",
-                  borderTop: i === 0 ? "none" : "1px solid #f3f4f6",
-                  cursor: "pointer",
-                }}
+                className="flex flex-col sm:flex-row sm:items-center sm:justify-between py-3 border-t first:border-t-0"
               >
-                <span style={{ fontSize: 13.5, color: "#111827", fontWeight: 500 }}>{p.title}</span>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0, marginLeft: 16 }}>
-                  <span style={{ ...p.categoryStyle, fontSize: 10.5, fontWeight: 700, padding: "2px 9px", borderRadius: 4 }}>
-                    {p.category}
-                  </span>
-                  <span style={{ fontSize: 11.5, color: "#9ca3af", whiteSpace: "nowrap" }}>{p.time}</span>
-                </div>
+                <span className="text-sm font-medium text-gray-900">{p.title}</span>
+                <span className="text-xs text-gray-400">{p.time}</span>
               </div>
             ))}
           </div>
-        </div>
+        </>
       )}
 
-      {/* ── MY POSTS TAB ── */}
+      {/* Posts Tab */}
       {activeTab === "posts" && (
-        <div style={{ background: "#fff", borderRadius: 12, border: "1.5px solid #f3f4f6", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", padding: "20px 24px" }}>
-          <p style={{ fontSize: 10, fontWeight: 600, color: "#9ca3af", letterSpacing: "1.5px", textTransform: "uppercase", margin: "0 0 14px" }}>All My Posts</p>
-          {RECENT_POSTS.map((p, i) => (
-            <div key={p.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 0", borderTop: i === 0 ? "none" : "1px solid #f3f4f6", cursor: "pointer" }}
-              onMouseEnter={(e) => (e.currentTarget.style.paddingLeft = "6px")}
-              onMouseLeave={(e) => (e.currentTarget.style.paddingLeft = "0")}
-            >
-              <span style={{ fontSize: 13.5, color: "#111827", fontWeight: 500, transition: "padding 0.12s" }}>{p.title}</span>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0, marginLeft: 16 }}>
-                <span style={{ ...p.categoryStyle, fontSize: 10.5, fontWeight: 700, padding: "2px 9px", borderRadius: 4 }}>{p.category}</span>
-                <span style={{ fontSize: 11.5, color: "#9ca3af", whiteSpace: "nowrap" }}>{p.time}</span>
-              </div>
+        <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+          {RECENT_POSTS.map((p) => (
+            <div key={p.id} className="py-3 border-t first:border-t-0">
+              {p.title}
             </div>
           ))}
         </div>
       )}
 
-      {/* ── CHAT HISTORY TAB ── */}
+      {/* Chat Tab */}
       {activeTab === "chat" && (
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+        <div className="space-y-4">
           {CHAT_HISTORY.map((c) => (
-            <div key={c.id} style={{ background: "#fff", borderRadius: 12, border: "1.5px solid #f3f4f6", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", padding: "18px 22px" }}>
-              <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 10 }}>
-                <span style={{ fontSize: 18 }}>🧑‍🎓</span>
-                <div style={{ background: PRIMARY_LIGHT, border: `1px solid ${PRIMARY}20`, borderRadius: 8, padding: "8px 14px", fontSize: 13.5, color: "#111827", fontWeight: 500 }}>
-                  {c.query}
-                </div>
-              </div>
-              <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
-                <span style={{ fontSize: 18 }}>🤖</span>
-                <div style={{ background: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: 8, padding: "8px 14px", fontSize: 13, color: "#4b5563", lineHeight: 1.6 }}>
-                  {c.reply}
-                </div>
-              </div>
-              <div style={{ fontSize: 11, color: "#9ca3af", marginTop: 10, textAlign: "right" }}>{c.time}</div>
+            <div key={c.id} className="bg-white rounded-xl shadow-sm p-4">
+              <div className="mb-2 text-sm font-medium">🧑‍🎓 {c.query}</div>
+              <div className="text-sm text-gray-600">🤖 {c.reply}</div>
+              <div className="text-xs text-gray-400 mt-2 text-right">{c.time}</div>
             </div>
           ))}
         </div>
       )}
 
-      {/* ── NOTIFICATIONS TAB ── */}
+      {/* Notifications Tab */}
       {activeTab === "notifications" && (
-        <div style={{ background: "#fff", borderRadius: 12, border: "1.5px solid #f3f4f6", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", overflow: "hidden" }}>
-          {NOTIFICATIONS.map((n, i) => (
-            <div key={n.id} style={{
-              display: "flex", alignItems: "flex-start", gap: 14,
-              padding: "16px 22px",
-              borderTop: i === 0 ? "none" : "1px solid #f3f4f6",
-              background: n.unread ? PRIMARY_LIGHT : "#fff",
-              transition: "background 0.12s", cursor: "pointer",
-            }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = "#fef2f2")}
-              onMouseLeave={(e) => (e.currentTarget.style.background = n.unread ? PRIMARY_LIGHT : "#fff")}
+        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+          {NOTIFICATIONS.map((n) => (
+            <div
+              key={n.id}
+              className={`flex gap-3 p-4 border-t first:border-t-0 ${
+                n.unread ? "bg-red-50" : "bg-white"
+              }`}
             >
-              <span style={{ fontSize: 22, flexShrink: 0 }}>{n.icon}</span>
-              <div style={{ flex: 1 }}>
-                <p style={{ fontSize: 13.5, color: "#111827", margin: "0 0 4px", fontWeight: n.unread ? 600 : 400 }}>{n.text}</p>
-                <span style={{ fontSize: 11.5, color: "#9ca3af" }}>{n.time}</span>
+              <span>{n.icon}</span>
+              <div className="flex-1">
+                <p className="text-sm">{n.text}</p>
+                <span className="text-xs text-gray-400">{n.time}</span>
               </div>
-              {n.unread && (
-                <div style={{ width: 8, height: 8, borderRadius: "50%", background: PRIMARY, flexShrink: 0, marginTop: 6 }} />
-              )}
             </div>
           ))}
         </div>
       )}
 
-      {/* ── SETTINGS TAB ── */}
+      {/* Settings Tab */}
       {activeTab === "settings" && (
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-          {[
-            { title: "Email Notifications", desc: "Receive email alerts for new replies and announcements", enabled: true },
-            { title: "Push Notifications", desc: "Get browser push notifications for activity on your posts", enabled: false },
-            { title: "Show Profile Publicly", desc: "Allow other students to view your profile and posts", enabled: true },
-            { title: "Dark Mode", desc: "Switch to a darker colour scheme (system default)", enabled: false },
-          ].map((s, i) => (
-            <div key={i} style={{
-              background: "#fff", borderRadius: 12,
-              border: "1.5px solid #f3f4f6",
-              boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
-              padding: "18px 22px",
-              display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20,
-            }}>
-              <div>
-                <div style={{ fontSize: 14, fontWeight: 600, color: "#111827", marginBottom: 3 }}>{s.title}</div>
-                <div style={{ fontSize: 12.5, color: "#6b7280" }}>{s.desc}</div>
-              </div>
-              <div style={{
-                width: 44, height: 24, borderRadius: 12, flexShrink: 0,
-                background: s.enabled ? PRIMARY : "#d1d5db",
-                position: "relative", cursor: "pointer", transition: "background 0.2s",
-              }}>
-                <div style={{
-                  width: 18, height: 18, borderRadius: "50%", background: "#fff",
-                  position: "absolute", top: 3,
-                  left: s.enabled ? 23 : 3,
-                  transition: "left 0.2s",
-                  boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
-                }} />
-              </div>
+        <div className="space-y-4">
+          {["Email Notifications", "Push Notifications", "Dark Mode"].map((s) => (
+            <div
+              key={s}
+              className="bg-white rounded-xl shadow-sm p-4 flex items-center justify-between"
+            >
+              <span>{s}</span>
+              <div className="w-11 h-6 bg-gray-300 rounded-full"></div>
             </div>
           ))}
-
-          {/* Logout */}
-          <div style={{
-            background: "#fff", borderRadius: 12,
-            border: "1.5px solid #fee2e2",
-            padding: "18px 22px", marginTop: 4,
-            display: "flex", alignItems: "center", justifyContent: "space-between",
-          }}>
-            <div>
-              <div style={{ fontSize: 14, fontWeight: 600, color: "#991b1b" }}>Log Out</div>
-              <div style={{ fontSize: 12.5, color: "#9ca3af" }}>Sign out of your Smart UniMate account</div>
-            </div>
-            <button style={{
-              padding: "8px 20px", background: "#fff",
-              color: "#991b1b", border: "1.5px solid #fca5a5",
-              borderRadius: 8, fontSize: 13, fontWeight: 600,
-              cursor: "pointer", fontFamily: "inherit",
-              transition: "all 0.12s",
-            }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = "#fff0f0"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; }}
-            >
-              🚪 Log Out
-            </button>
-          </div>
         </div>
       )}
     </div>

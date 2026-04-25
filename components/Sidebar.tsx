@@ -18,12 +18,12 @@ import {
 const NAV = [
   { href: '/', icon: Home, label: 'Home' },
   { href: '/chat', icon: Bot, label: 'AI Chat' },
-  { href: '/academic', icon: Book, label: 'Academic' },
   { href: '/timetable', icon: CalendarDays, label: 'Timetable' },
   { href: '/gpa', icon: TrendingUp, label: 'GPA Calculator' },
   { href: '/news', icon: Newspaper, label: 'News', danger: false },
   { href: '/community', icon: Users, label: 'Community' },
   { href: '/profile', icon: User, label: 'Profile' },
+  { href: '/knowledgeBase', icon: Book, label: 'Knowledge Base' },
   { href: '/admin', icon: ShieldAlert, label: 'Admin', danger: true },
 ]
 

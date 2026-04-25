@@ -3,12 +3,13 @@
 import { useState } from 'react'
 import Sidebar from './Sidebar'
 import Header from './Header'
+import { ThemeProvider } from './ThemeProvider'
 
 export default function LayoutClient({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <>
+    <ThemeProvider>
       <Header setSidebarOpen={setSidebarOpen} sidebarOpen={sidebarOpen}/>
 
       <div className="flex">
@@ -21,6 +22,6 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
           {children}
         </main>
       </div>
-    </>
+    </ThemeProvider>
   )
 }

@@ -68,20 +68,20 @@ export default function Admin() {
   );
 
   return (
-    <div style={{ padding: "28px 32px", fontFamily: "'DM Sans','Segoe UI',sans-serif", background: "#fafafa", minHeight: "100vh" }}>
+    <div style={{ padding: "16px 20px 24px 20px", fontFamily: "'DM Sans','Segoe UI',sans-serif", background: "#fafafa", minHeight: "100vh" }} className="sm:p-5 md:p-7 lg:p-8">
 
       {/* PAGE HEADER */}
-      <div style={{ marginBottom: 20 }}>
-        <h1 style={{ fontSize: 22, fontWeight: 700, color: PRIMARY, margin: 0, letterSpacing: "-0.3px" }}>
+      <div style={{ marginBottom: 16 }} className="sm:mb-5">
+        <h1 style={{ fontSize: 18, fontWeight: 700, color: PRIMARY, margin: 0, letterSpacing: "-0.3px" }} className="sm:text-xl md:text-2xl">
           Admin Dashboard
         </h1>
-        <p style={{ fontSize: 13, color: "#9ca3af", margin: "4px 0 0" }}>
+        <p style={{ fontSize: 12, color: "#9ca3af", margin: "4px 0 0" }} className="sm:text-13">
           Smart UniMate · Mr. D. Patabandi · Administrator
         </p>
       </div>
 
-      {/* TABS */}
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 0, borderBottom: "2px solid #f3f4f6", marginBottom: 24 }}>
+      {/* TABS - scrollable on mobile */}
+      <div style={{ display: "flex", flexWrap: "nowrap", gap: 0, borderBottom: "2px solid #f3f4f6", marginBottom: 16, overflowX: "auto", paddingBottom: 2 }} className="sm:mb-6 sm:flex-wrap">
         {ADMIN_TABS.map((t) => {
           const isActive = activeTab === t.value;
           return (
@@ -112,7 +112,7 @@ export default function Admin() {
       {activeTab === "overview" && (
         <div>
           {/* STAT CARDS */}
-          <div style={{ display: "flex", gap: 14, marginBottom: 20, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: 10, marginBottom: 16, flexWrap: "wrap" }} className="sm:gap-14 sm:mb-5">
             <StatCard value="1,248" label="Total Students" sub="↑ 12 this week" />
             <StatCard value="347" label="Chatbot Queries Today" sub="↑ 23% vs yesterday" />
             <StatCard value="89" label="Active Posts" sub="↑ 5 new today" />
@@ -120,12 +120,12 @@ export default function Admin() {
           </div>
 
           {/* CHARTS ROW */}
-          <div style={{ display: "flex", gap: 14, marginBottom: 20, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: 10, marginBottom: 16, flexWrap: "wrap" }} className="sm:gap-14 sm:mb-5">
             {/* Bar Chart */}
             <div style={{
-              flex: 2, minWidth: 280, background: "#fff", borderRadius: 12,
-              border: "1.5px solid #f3f4f6", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", padding: "20px 24px",
-            }}>
+              flex: 2, minWidth: 260, background: "#fff", borderRadius: 12,
+              border: "1.5px solid #f3f4f6", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", padding: "16px 20px",
+            }} className="sm:p-5 md:p-6">
               <p style={{ fontSize: 10, fontWeight: 600, color: "#9ca3af", letterSpacing: "1.5px", textTransform: "uppercase", margin: "0 0 20px" }}>
                 Chatbot Usage — Last 7 Days
               </p>
@@ -176,25 +176,25 @@ export default function Admin() {
 
           {/* STUDENT ACCOUNTS TABLE */}
           <div style={{ background: "#fff", borderRadius: 12, border: "1.5px solid #f3f4f6", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", overflow: "hidden" }}>
-            <div style={{ padding: "16px 20px 12px", borderBottom: "1px solid #f3f4f6", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
+            <div style={{ padding: "12px 16px 10px", borderBottom: "1px solid #f3f4f6", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, flexWrap: "wrap" }}>
               <p style={{ fontSize: 10, fontWeight: 600, color: "#9ca3af", letterSpacing: "1.5px", textTransform: "uppercase", margin: 0 }}>Student Accounts</p>
-              <div style={{ display: "flex", gap: 8 }}>
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                 <div style={{ position: "relative" }}>
-                  <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: "#9ca3af", fontSize: 13 }}>🔍</span>
+                  <span style={{ position: "absolute", left: 8, top: "50%", transform: "translateY(-50%)", color: "#9ca3af", fontSize: 12 }}>🔍</span>
                   <input
                     type="text"
-                    placeholder="Search by name or index..."
+                    placeholder="Search..."
                     value={userSearch}
                     onChange={(e) => setUserSearch(e.target.value)}
-                    style={{ padding: "7px 12px 7px 30px", border: "1.5px solid #e5e7eb", borderRadius: 7, fontSize: 12.5, fontFamily: "inherit", outline: "none", width: 220, color: "#374151" }}
+                    style={{ padding: "6px 10px 6px 28px", border: "1.5px solid #e5e7eb", borderRadius: 7, fontSize: 12, fontFamily: "inherit", outline: "none", width: 140, color: "#374151" }}
                     onFocus={(e) => (e.target.style.borderColor = PRIMARY_MID)}
                     onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                   />
                 </div>
-                <button style={{ padding: "7px 16px", background: PRIMARY, color: "#fff", border: "none", borderRadius: 7, fontSize: 12.5, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}
+                <button style={{ padding: "6px 12px", background: PRIMARY, color: "#fff", border: "none", borderRadius: 7, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}
                   onMouseEnter={(e) => (e.currentTarget.style.background = PRIMARY_MID)}
                   onMouseLeave={(e) => (e.currentTarget.style.background = PRIMARY)}
-                >+ Add User</button>
+                >+ Add</button>
               </div>
             </div>
             {/* Table header */}

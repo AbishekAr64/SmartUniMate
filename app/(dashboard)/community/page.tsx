@@ -1,4 +1,5 @@
 'use client';
+
 import { useState } from "react";
 
 type Category = "all" | "academic" | "campus" | "clubs" | "tips" | "qna";
@@ -30,8 +31,9 @@ const POSTS: Post[] = [
     timeAgo: "2 hours ago",
     category: "campus",
     title: "Best food spots near the university? 🍛",
-    body: "Hey freshers! I've been exploring the area around Belihuloya and found some great spots. The canteen near the Engineering block does amazing rice & curry for Rs. 120. There's also a small bakery on the main road with fresh rotis every morning. Any other recommendations?",
-    image: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&q=80",
+    body: "Hey freshers! I've been exploring the area around Belihuloya...",
+    image:
+      "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&q=80",
     likes: 24,
     comments: 8,
     avatar: "🧑‍🎓",
@@ -45,57 +47,14 @@ const POSTS: Post[] = [
     timeAgo: "5 hours ago",
     category: "academic",
     title: "IS3040 Group Assignment — anyone need members?",
-    body: "Our group has space for one more person for the IS3040 semester project. We're focusing on a smart inventory system using React + Node. DM me if you're interested. Deadline is April 30.",
+    body: "Our group has space for one more person...",
     likes: 11,
     comments: 5,
     avatar: "👨‍💻",
   },
-  {
-    id: 3,
-    author: "S. Vithuckshana",
-    studentId: "22FCS0088",
-    year: "Year 2",
-    program: "CS",
-    timeAgo: "1 day ago",
-    category: "tips",
-    title: "How I passed IS2030 without crying 😅",
-    body: "Okay so Data Structures was rough. Here's what actually helped me: (1) Do past papers from 2019–2023, (2) Focus on linked lists and trees — they always appear, (3) Form a study group, even just 2–3 people. The library 3rd floor is quiet after 7 PM. Good luck everyone!",
-    likes: 47,
-    comments: 19,
-    avatar: "👩‍💻",
-  },
-  {
-    id: 4,
-    author: "R.M. Gunasekara",
-    studentId: "23FIS0211",
-    year: "Year 1",
-    program: "IS",
-    timeAgo: "2 days ago",
-    category: "clubs",
-    title: "IEEE Student Branch – Open Recruitment 2026 🎉",
-    body: "The SUSL IEEE Student Branch is now recruiting new members! We have workshops, hackathons, and networking events planned for this semester. Fill the Google Form at the Student Affairs office or contact us at ieee@susl.ac.lk. First meeting: March 20 at 3 PM, Lecture Hall 4.",
-    image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80",
-    likes: 63,
-    comments: 14,
-    avatar: "🧑‍🔬",
-  },
-  {
-    id: 5,
-    author: "T.N. Bandara",
-    studentId: "22FCS0155",
-    year: "Year 2",
-    program: "CS",
-    timeAgo: "3 days ago",
-    category: "qna",
-    title: "Can I apply for the Dean's List if one grade is a B+?",
-    body: "I got mostly A's this semester but one module is a B+. Does that disqualify me from the Dean's List? The handbook is confusing. Anyone who's been on it before, please help!",
-    likes: 9,
-    comments: 12,
-    avatar: "🎓",
-  },
 ];
 
-const CATEGORIES: { label: string; value: Category; icon: string }[] = [
+const CATEGORIES = [
   { label: "All Posts", value: "all", icon: "📰" },
   { label: "Academic", value: "academic", icon: "📚" },
   { label: "Campus Life", value: "campus", icon: "🏫" },
@@ -104,31 +63,11 @@ const CATEGORIES: { label: string; value: Category; icon: string }[] = [
   { label: "Q&A", value: "qna", icon: "❓" },
 ];
 
-const SORTS: { label: string; value: SortBy; icon: string }[] = [
+const SORTS = [
   { label: "Most Recent", value: "recent", icon: "🕐" },
   { label: "Most Liked", value: "liked", icon: "🔥" },
   { label: "My Posts", value: "mine", icon: "👤" },
 ];
-
-const CATEGORY_BADGE: Record<Exclude<Category, "all">, React.CSSProperties> = {
-  academic: { background: "#eff6ff", color: "#1e40af", border: "1px solid #93c5fd" },
-  campus: { background: "#f0fdf4", color: "#166534", border: "1px solid #86efac" },
-  clubs: { background: "#faf5ff", color: "#6b21a8", border: "1px solid #d8b4fe" },
-  tips: { background: "#fefce8", color: "#854d0e", border: "1px solid #fde047" },
-  qna: { background: "#fff7ed", color: "#9a3412", border: "1px solid #fdba74" },
-};
-
-const CATEGORY_LABEL: Record<Exclude<Category, "all">, string> = {
-  academic: "Academic",
-  campus: "Campus Life",
-  clubs: "Clubs & Events",
-  tips: "Tips & Guides",
-  qna: "Q&A",
-};
-
-const PRIMARY = "#7f1d1d";
-const PRIMARY_LIGHT = "#fef2f2";
-const PRIMARY_MID = "#b91c1c";
 
 export default function Community() {
   const [activeCategory, setActiveCategory] = useState<Category>("all");
@@ -154,271 +93,143 @@ export default function Community() {
   });
 
   return (
-    <div style={{ padding: "24px 28px", fontFamily: "'DM Sans','Segoe UI',sans-serif", background: "#fafafa", minHeight: "100vh" }}>
-
-      {/* HEADER */}
-      <div style={{ marginBottom: 20 }}>
-        <h1 style={{ fontSize: 22, fontWeight: 700, color: PRIMARY, margin: 0, letterSpacing: "-0.3px" }}>
+    <div className="min-h-screen bg-gray-50 p-3 sm:p-4 md:p-6 lg:p-8 font-sans">
+      {/* Header */}
+      <div className="mb-4 sm:mb-5">
+        <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-red-900">
           Community
         </h1>
-        <p style={{ fontSize: 13, color: "#9ca3af", margin: "4px 0 0" }}>
+        <p className="text-xs sm:text-sm text-gray-400">
           Share, discuss, and connect with fellow students
         </p>
       </div>
 
-      {/* CATEGORY TABS */}
-      <div style={{
-        display: "flex", gap: 4, marginBottom: 0,
-        borderBottom: "2px solid #f3f4f6",
-        paddingBottom: 0, overflowX: "auto",
-      }}>
+      {/* Categories - scrollable on mobile */}
+      <div className="flex gap-2 border-b border-gray-200 pb-2 overflow-x-auto pb-3 -mx-3 px-3 sm:px-0 sm:flex-wrap">
         {CATEGORIES.map((c) => {
           const isActive = activeCategory === c.value;
           return (
             <button
               key={c.value}
-              onClick={() => { setActiveCategory(c.value); setSortBy("recent"); }}
-              style={{
-                display: "flex", alignItems: "center", gap: 6,
-                padding: "9px 14px",
-                border: "none", background: "transparent",
-                fontFamily: "inherit", fontSize: 13, fontWeight: isActive ? 600 : 400,
-                color: isActive ? PRIMARY : "#6b7280",
-                cursor: "pointer", whiteSpace: "nowrap",
-                borderBottom: isActive ? `2px solid ${PRIMARY}` : "2px solid transparent",
-                marginBottom: "-2px",
-                transition: "all 0.12s",
-              }}
-              onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.color = PRIMARY; }}
-              onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.color = "#6b7280"; }}
+              onClick={() => setActiveCategory(c.value as Category)}
+              className={`px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm transition whitespace-nowrap ${
+                isActive
+                  ? "bg-red-900 text-white"
+                  : "bg-white text-gray-600 border"
+              }`}
             >
-              <span style={{ fontSize: 14 }}>{c.icon}</span>
-              {c.label}
+              {c.icon} {c.label}
             </button>
           );
         })}
       </div>
 
-      {/* SORT TABS */}
-      <div style={{
-        display: "flex", gap: 4, marginBottom: 20,
-        paddingTop: 10,
-      }}>
-        {SORTS.map((s) => {
-          const isActive = sortBy === s.value;
-          return (
-            <button
-              key={s.value}
-              onClick={() => setSortBy(s.value)}
-              style={{
-                display: "flex", alignItems: "center", gap: 5,
-                padding: "5px 12px",
-                border: `1.5px solid ${isActive ? PRIMARY : "#e5e7eb"}`,
-                borderRadius: 20,
-                background: isActive ? PRIMARY_LIGHT : "#fff",
-                color: isActive ? PRIMARY : "#6b7280",
-                fontFamily: "inherit", fontSize: 12, fontWeight: isActive ? 600 : 400,
-                cursor: "pointer",
-                transition: "all 0.12s",
-              }}
-            >
-              <span style={{ fontSize: 12 }}>{s.icon}</span>
-              {s.label}
-            </button>
-          );
-        })}
+      {/* Sort */}
+      <div className="flex flex-wrap gap-2 my-3 sm:my-4">
+        {SORTS.map((s) => (
+          <button
+            key={s.value}
+            onClick={() => setSortBy(s.value as SortBy)}
+            className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full border bg-white text-xs sm:text-sm"
+          >
+            {s.icon} {s.label}
+          </button>
+        ))}
       </div>
 
-      {/* COMPOSE BOX */}
-      <div style={{
-        background: "#fff", borderRadius: 12,
-        border: "1.5px solid #f3f4f6",
-        boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
-        padding: "14px 16px",
-        display: "flex", gap: 12, alignItems: "flex-start",
-        marginBottom: 18,
-      }}>
-        <div style={{
-          width: 38, height: 38, borderRadius: "50%", flexShrink: 0,
-          background: `linear-gradient(135deg, ${PRIMARY}, #dc2626)`,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: 18,
-        }}>👩‍💻</div>
-        <div style={{ flex: 1, display: "flex", gap: 10 }}>
+      {/* Compose */}
+      <div className="bg-white rounded-xl shadow-sm p-3 sm:p-4 flex flex-col md:flex-row gap-2 sm:gap-3 mb-4 sm:mb-5">
+        <div className="text-xl sm:text-2xl">👩‍💻</div>
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 flex-1">
           <input
             type="text"
-            placeholder="What's on your mind? Share tips, ask questions, or help a fellow student..."
             value={postText}
             onChange={(e) => setPostText(e.target.value)}
-            style={{
-              flex: 1, padding: "9px 14px",
-              border: "1.5px solid #e5e7eb", borderRadius: 8,
-              fontSize: 13, color: "#374151", outline: "none",
-              fontFamily: "inherit", background: "#fafafa",
-            }}
-            onFocus={(e) => (e.target.style.borderColor = PRIMARY_MID)}
-            onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
+            placeholder="What's on your mind?"
+            className="flex-1 border rounded-lg px-3 sm:px-4 py-2 text-xs sm:text-sm outline-none min-w-0"
           />
-          <button
-            style={{
-              padding: "9px 20px", background: PRIMARY,
-              color: "#fff", border: "none", borderRadius: 8,
-              fontSize: 13, fontWeight: 600, cursor: "pointer",
-              fontFamily: "inherit", flexShrink: 0,
-              transition: "background 0.12s",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = PRIMARY_MID)}
-            onMouseLeave={(e) => (e.currentTarget.style.background = PRIMARY)}
-          >
+          <button className="bg-red-900 text-white px-4 sm:px-5 py-2 rounded-lg text-xs sm:text-sm">
             Post
           </button>
         </div>
       </div>
 
-      {/* POSTS */}
-      {filtered.length === 0 ? (
-        <div style={{
-          textAlign: "center", padding: "60px 20px",
-          background: "#fff", borderRadius: 12,
-          border: "1.5px solid #f3f4f6", color: "#9ca3af",
-        }}>
-          <div style={{ fontSize: 40, marginBottom: 12 }}>📭</div>
-          <div style={{ fontSize: 14, fontWeight: 500 }}>No posts here yet.</div>
-        </div>
-      ) : (
-        filtered.map((post) => {
+      {/* Posts */}
+      <div className="space-y-4">
+        {filtered.map((post) => {
           const liked = likedPosts.has(post.id);
+
           return (
             <div
               key={post.id}
-              style={{
-                background: "#fff", borderRadius: 12,
-                border: "1.5px solid #f3f4f6",
-                boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
-                marginBottom: 14, overflow: "hidden",
-                transition: "box-shadow 0.15s",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 4px 16px rgba(127,29,29,0.08)")}
-              onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "0 1px 4px rgba(0,0,0,0.04)")}
+              className="bg-white rounded-xl shadow-sm overflow-hidden"
             >
-              <div style={{ padding: "16px 18px 0" }}>
-                {/* POST HEADER */}
-                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 12 }}>
-                  <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-                    <div style={{
-                      width: 40, height: 40, borderRadius: "50%", flexShrink: 0,
-                      background: `linear-gradient(135deg, ${PRIMARY}22, #dc262622)`,
-                      border: `1.5px solid ${PRIMARY}30`,
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      fontSize: 20,
-                    }}>{post.avatar}</div>
-                    <div>
-                      <div style={{ fontSize: 13.5, fontWeight: 600, color: "#111827" }}>{post.author}</div>
-                      <div style={{ fontSize: 11.5, color: "#9ca3af" }}>
-                        {post.timeAgo} · {post.studentId} · {post.year} {post.program}
-                      </div>
-                    </div>
+              <div className="p-4">
+                {/* Post Header */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                  <div>
+                    <h3 className="font-semibold text-gray-900">
+                      {post.author}
+                    </h3>
+                    <p className="text-xs text-gray-400 break-words">
+                      {post.timeAgo} · {post.studentId} · {post.year}{" "}
+                      {post.program}
+                    </p>
                   </div>
-                  <span style={{
-                    ...CATEGORY_BADGE[post.category],
-                    fontSize: 10.5, fontWeight: 700,
-                    padding: "3px 9px", borderRadius: 4, flexShrink: 0,
-                  }}>
-                    {CATEGORY_LABEL[post.category]}
+                  <span className="text-xs bg-gray-100 px-2 py-1 rounded">
+                    {post.category}
                   </span>
                 </div>
 
-                {/* POST CONTENT */}
-                <h3 style={{ fontSize: 14.5, fontWeight: 700, color: "#111827", margin: "0 0 8px", lineHeight: 1.4 }}>
+                {/* Content */}
+                <h2 className="mt-3 text-base sm:text-lg font-bold text-gray-900 break-words">
                   {post.title}
-                </h3>
-                <p style={{ fontSize: 13, color: "#4b5563", lineHeight: 1.65, margin: "0 0 14px" }}>
+                </h2>
+                <p className="mt-2 text-sm text-gray-600 break-words">
                   {post.body}
                 </p>
               </div>
 
-              {/* POST IMAGE */}
+              {/* Image */}
               {post.image && (
-                <div style={{ marginBottom: 0 }}>
-                  <img
-                    src={post.image}
-                    alt="post"
-                    style={{ width: "100%", maxHeight: 260, objectFit: "cover", display: "block" }}
-                  />
-                </div>
+                <img
+                  src={post.image}
+                  alt="post"
+                  className="w-full h-auto max-h-64 object-cover"
+                />
               )}
 
-              {/* POST FOOTER */}
-              <div style={{
-                display: "flex", alignItems: "center", justifyContent: "space-between",
-                padding: "10px 18px",
-                borderTop: "1.5px solid #f9fafb",
-              }}>
-                <div style={{ display: "flex", gap: 6 }}>
-                  {/* Like */}
+              {/* Footer */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 border-t">
+                <div className="flex flex-wrap gap-2">
                   <button
                     onClick={() => toggleLike(post.id)}
-                    style={{
-                      display: "flex", alignItems: "center", gap: 5,
-                      padding: "5px 12px",
-                      border: `1.5px solid ${liked ? PRIMARY : "#e5e7eb"}`,
-                      borderRadius: 7, background: liked ? PRIMARY_LIGHT : "#fff",
-                      color: liked ? PRIMARY : "#6b7280",
-                      fontSize: 12, fontWeight: liked ? 600 : 400,
-                      cursor: "pointer", fontFamily: "inherit",
-                      transition: "all 0.12s",
-                    }}
+                    className={`px-3 py-1 rounded-lg border text-sm ${
+                      liked
+                        ? "bg-red-50 border-red-900 text-red-900"
+                        : "bg-white border-gray-300 text-gray-600"
+                    }`}
                   >
-                    🔥 {post.likes + (liked ? 1 : 0)} Likes
+                    🔥 {post.likes + (liked ? 1 : 0)}
                   </button>
-                  {/* Comment */}
-                  <button style={{
-                    display: "flex", alignItems: "center", gap: 5,
-                    padding: "5px 12px",
-                    border: "1.5px solid #e5e7eb", borderRadius: 7,
-                    background: "#fff", color: "#6b7280",
-                    fontSize: 12, cursor: "pointer", fontFamily: "inherit",
-                    transition: "all 0.12s",
-                  }}
-                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = PRIMARY; e.currentTarget.style.color = PRIMARY; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#e5e7eb"; e.currentTarget.style.color = "#6b7280"; }}
-                  >
-                    💬 {post.comments} Comments
+
+                  <button className="px-3 py-1 rounded-lg border text-sm text-gray-600">
+                    💬 {post.comments}
                   </button>
-                  {/* Share */}
-                  <button style={{
-                    display: "flex", alignItems: "center", gap: 5,
-                    padding: "5px 12px",
-                    border: "1.5px solid #e5e7eb", borderRadius: 7,
-                    background: "#fff", color: "#6b7280",
-                    fontSize: 12, cursor: "pointer", fontFamily: "inherit",
-                    transition: "all 0.12s",
-                  }}
-                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = PRIMARY; e.currentTarget.style.color = PRIMARY; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#e5e7eb"; e.currentTarget.style.color = "#6b7280"; }}
-                  >
+
+                  <button className="px-3 py-1 rounded-lg border text-sm text-gray-600">
                     🔗 Share
                   </button>
                 </div>
-                {/* Report */}
-                <button style={{
-                  display: "flex", alignItems: "center", gap: 5,
-                  padding: "5px 12px",
-                  border: "1.5px solid #fee2e2", borderRadius: 7,
-                  background: "#fff", color: "#ef4444",
-                  fontSize: 12, cursor: "pointer", fontFamily: "inherit",
-                  transition: "all 0.12s",
-                }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = "#fff0f0"; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; }}
-                >
+
+                <button className="px-3 py-1 rounded-lg border border-red-200 text-red-500 text-sm">
                   🚩 Report
                 </button>
               </div>
             </div>
           );
-        })
-      )}
+        })}
+      </div>
     </div>
   );
 }

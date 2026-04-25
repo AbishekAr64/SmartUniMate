@@ -9,12 +9,21 @@ const ThemeCtx = createContext<{ theme: Theme; toggle: () => void }>({
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>('light')
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     const saved = localStorage.getItem('susl_theme') as Theme
     if (saved) {
       setTheme(saved)
       document.documentElement.classList.toggle('dark', saved === 'dark')
+    } else {
+      // Check system preference
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+      if (prefersDark) {
+        setTheme('dark')
+        document.documentElement.classList.add('dark')
+      }
     }
   }, [])
 
@@ -23,6 +32,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     setTheme(next)
     localStorage.setItem('susl_theme', next)
     document.documentElement.classList.toggle('dark', next === 'dark')
+  }
+
+  // Prevent hydration mismatch
+  if (!mounted) {
+    return <>{children}</>
   }
 
   return <ThemeCtx.Provider value={{ theme, toggle }}>{children}</ThemeCtx.Provider>

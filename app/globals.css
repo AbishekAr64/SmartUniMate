@@ -11,4 +11,12 @@
   body {
     @apply bg-stone-50 text-stone-900;
   }
+  
+  html.dark body {
+    @apply bg-stone-950 text-stone-100;
+  }
+  
+  html.dark {
+    color-scheme: dark;
+  }
 }

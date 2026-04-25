@@ -1,13 +1,19 @@
 'use client';
 import { useState } from "react";
 
-type Category = "all" | "academic" | "events" | "deadlines" | "faculty" | "sports" | "careers";
+type Category =
+  | "all"
+  | "academic"
+  | "events"
+  | "deadlines"
+  | "faculty"
+  | "sports"
+  | "careers";
 
 interface NewsItem {
   id: number;
   category: Exclude<Category, "all">;
   badge: string;
-  badgeStyle: React.CSSProperties;
   title: string;
   description: string;
   date: string;
@@ -21,83 +27,29 @@ const newsItems: NewsItem[] = [
     id: 1,
     category: "deadlines",
     badge: "Deadline",
-    badgeStyle: { background: "#fff0f0", color: "#991b1b", border: "1px solid #fca5a5" },
     title: "Mid-Semester Exam Timetable – Semester 2, 2026",
     description:
-      "IS and CS students: IS2030 is scheduled for March 22 at 9 AM, New Exam Hall B, Belihuloya Campus.",
+      "IS and CS students: IS2030 is scheduled for March 22 at 9 AM.",
     date: "Mar 3, 2026",
     source: "Examinations Division",
-    accent: "#ef4444",
+    accent: "bg-red-50 border-red-300",
     icon: "📋",
   },
   {
     id: 2,
     category: "events",
     badge: "Event",
-    badgeStyle: { background: "#f0fdf4", color: "#166534", border: "1px solid #86efac" },
     title: "Faculty of Computing Open Day – March 14, 2026",
     description:
-      "Join us for an open day showcasing final year projects, AI demos, and industry panel discussions at the Faculty of Computing.",
+      "Join us for an open day showcasing final year projects and AI demos.",
     date: "Mar 5, 2026",
     source: "Faculty of Computing",
-    accent: "#16a34a",
+    accent: "bg-green-50 border-green-300",
     icon: "🖥️",
-  },
-  {
-    id: 3,
-    category: "sports",
-    badge: "Sports",
-    badgeStyle: { background: "#fff7ed", color: "#9a3412", border: "1px solid #fdba74" },
-    title: "Inter-University Badminton Championship Results 2026",
-    description:
-      "SUSL claimed the runner-up title at the Inter-University Badminton Championship held in Colombo last week.",
-    date: "Feb 28, 2026",
-    source: "Sports Division",
-    accent: "#ea580c",
-    icon: "🏅",
-  },
-  {
-    id: 4,
-    category: "academic",
-    badge: "Academic",
-    badgeStyle: { background: "#eff6ff", color: "#1e40af", border: "1px solid #93c5fd" },
-    title: "New Elective Modules Available for Semester 3 Registration",
-    description:
-      "Students can now register for new elective modules including Machine Learning, Cloud Computing, and UI/UX Design before March 10.",
-    date: "Mar 1, 2026",
-    source: "Academic Affairs",
-    accent: "#2563eb",
-    icon: "📚",
-  },
-  {
-    id: 5,
-    category: "faculty",
-    badge: "Faculty",
-    badgeStyle: { background: "#faf5ff", color: "#6b21a8", border: "1px solid #d8b4fe" },
-    title: "Professor Dr. Nimal Jayawardena Joins as Dean of Science Faculty",
-    description:
-      "We welcome Professor Dr. Nimal Jayawardena as the new Dean of the Faculty of Science effective March 2026.",
-    date: "Mar 2, 2026",
-    source: "University Administration",
-    accent: "#9333ea",
-    icon: "🏛️",
-  },
-  {
-    id: 6,
-    category: "careers",
-    badge: "Careers",
-    badgeStyle: { background: "#fefce8", color: "#854d0e", border: "1px solid #fde047" },
-    title: "Career Fair 2026 – Over 40 Companies Participating",
-    description:
-      "The annual Career Fair returns on March 28 at the Main Hall. Students are encouraged to bring CVs and dress formally.",
-    date: "Mar 4, 2026",
-    source: "Career Guidance Unit",
-    accent: "#ca8a04",
-    icon: "💼",
   },
 ];
 
-const filters: { label: string; value: Category; icon: string }[] = [
+const filters = [
   { label: "All News", value: "all", icon: "📰" },
   { label: "Academic", value: "academic", icon: "🎓" },
   { label: "Events", value: "events", icon: "📅" },
@@ -107,10 +59,7 @@ const filters: { label: string; value: Category; icon: string }[] = [
   { label: "Careers", value: "careers", icon: "💼" },
 ];
 
-const PRIMARY = "#7f1d1d";
-const PRIMARY_MID = "#b91c1c";
-
-const News = () => {
+export default function News() {
   const [activeFilter, setActiveFilter] = useState<Category>("all");
   const [search, setSearch] = useState("");
 
@@ -120,229 +69,121 @@ const News = () => {
       search === "" ||
       item.title.toLowerCase().includes(search.toLowerCase()) ||
       item.description.toLowerCase().includes(search.toLowerCase());
+
     return matchCat && matchSearch;
   });
 
   return (
-    <div style={{ padding: "28px 32px", fontFamily: "'DM Sans', 'Segoe UI', sans-serif", background: "#fafafa", minHeight: "100vh" }}>
-
-      {/* PAGE HEADER */}
-      <div style={{ marginBottom: 20 }}>
-        <h1 style={{ fontSize: 22, fontWeight: 700, color: PRIMARY, margin: 0, letterSpacing: "-0.3px" }}>
+    <div className="min-h-screen bg-gray-50 p-3 sm:p-4 md:p-6 lg:p-8 font-sans">
+      {/* Header */}
+      <div className="mb-4 sm:mb-5">
+        <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-red-900">
           University News & Announcements
         </h1>
-        <p style={{ fontSize: 13, color: "#9ca3af", margin: "4px 0 0" }}>
+        <p className="text-xs sm:text-sm text-gray-400">
           Stay updated with the latest from Sabaragamuwa University
         </p>
       </div>
 
-      {/* FILTER TABS — wraps to next line instead of scrolling */}
-      <div style={{
-        display: "flex",
-        flexWrap: "wrap",          /* ← wrap instead of scroll */
-        gap: 0,
-        borderBottom: "2px solid #f3f4f6",
-        marginBottom: 0,
-      }}>
+      {/* Filters - scrollable on mobile */}
+      <div className="flex gap-2 border-b border-gray-200 pb-2 overflow-x-auto pb-3 -mx-3 px-3 sm:px-0 sm:flex-wrap">
         {filters.map((f) => {
           const isActive = activeFilter === f.value;
           return (
             <button
               key={f.value}
-              onClick={() => setActiveFilter(f.value)}
-              style={{
-                display: "flex", alignItems: "center", gap: 6,
-                padding: "9px 14px",
-                border: "none", background: "transparent",
-                fontFamily: "inherit", fontSize: 13,
-                fontWeight: isActive ? 600 : 400,
-                color: isActive ? PRIMARY : "#6b7280",
-                cursor: "pointer", whiteSpace: "nowrap",
-                borderBottom: isActive ? `2px solid ${PRIMARY}` : "2px solid transparent",
-                marginBottom: "-2px",
-                transition: "all 0.12s",
-              }}
-              onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.color = PRIMARY; }}
-              onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.color = "#6b7280"; }}
+              onClick={() => setActiveFilter(f.value as Category)}
+              className={`px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm transition whitespace-nowrap ${
+                isActive
+                  ? "bg-red-900 text-white"
+                  : "bg-white border text-gray-600"
+              }`}
             >
-              <span style={{ fontSize: 14 }}>{f.icon}</span>
-              {f.label}
+              {f.icon} {f.label}
             </button>
           );
         })}
       </div>
 
-      {/* SEARCH BAR */}
-      <div style={{ display: "flex", gap: 10, margin: "16px 0 20px" }}>
-        <div style={{ flex: 1, position: "relative" }}>
-          <span style={{
-            position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)",
-            color: "#9ca3af", fontSize: 14, pointerEvents: "none",
-          }}>🔍</span>
-          <input
-            type="text"
-            placeholder="Search news and announcements..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            style={{
-              width: "100%", padding: "10px 14px 10px 36px",
-              border: "1.5px solid #e5e7eb", borderRadius: 8,
-              fontSize: 14, color: "#374151", outline: "none",
-              background: "#fff", boxSizing: "border-box",
-              fontFamily: "inherit",
-            }}
-            onFocus={(e) => (e.target.style.borderColor = PRIMARY_MID)}
-            onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
-          />
-        </div>
-        <button
-          style={{
-            padding: "10px 22px",
-            background: PRIMARY,
-            color: "#fff",
-            border: "none",
-            borderRadius: 8,
-            fontSize: 13,
-            fontWeight: 600,
-            cursor: "pointer",
-            fontFamily: "inherit",
-            letterSpacing: "0.3px",
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = PRIMARY_MID)}
-          onMouseLeave={(e) => (e.currentTarget.style.background = PRIMARY)}
-        >
+      {/* Search */}
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 my-4 sm:my-5">
+        <input
+          type="text"
+          placeholder="🔍 Search news..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="flex-1 border rounded-lg px-3 sm:px-4 py-2 text-xs sm:text-sm outline-none min-w-0"
+        />
+        <button className="bg-red-900 hover:bg-red-700 text-white px-4 sm:px-5 py-2 rounded-lg text-xs sm:text-sm font-medium whitespace-nowrap">
           Search
         </button>
       </div>
 
-      {/* CONTENT AREA */}
-      <div>
-
-        {/* FEATURED CARD */}
-        {(activeFilter === "all" || activeFilter === "academic") && search === "" && (
-          <div style={{
-            background: "#fff",
-            borderRadius: 12,
-            overflow: "hidden",
-            marginBottom: 16,
-            border: "1.5px solid #f3f4f6",
-            boxShadow: "0 2px 10px rgba(127,29,29,0.07)",
-          }}>
-            <div style={{
-              height: 190,
-              background: `linear-gradient(135deg, ${PRIMARY} 0%, #b91c1c 50%, #dc2626 100%)`,
-              position: "relative",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              overflow: "hidden",
-            }}>
-              <div style={{
-                position: "absolute", width: 300, height: 300, borderRadius: "50%",
-                border: "60px solid rgba(255,255,255,0.05)", top: -80, right: -60,
-              }} />
-              <div style={{
-                position: "absolute", width: 200, height: 200, borderRadius: "50%",
-                border: "40px solid rgba(255,255,255,0.06)", bottom: -80, left: 40,
-              }} />
-              <span style={{ fontSize: 64, opacity: 0.25, position: "relative", zIndex: 1 }}>🎓</span>
-              <div style={{
-                position: "absolute", top: 14, left: 14,
-                background: "#fef08a", color: "#713f12",
-                fontSize: 11, fontWeight: 700, letterSpacing: "0.5px",
-                padding: "4px 10px", borderRadius: 5,
-                display: "flex", alignItems: "center", gap: 4,
-              }}>
-                ⭐ FEATURED
-              </div>
+      {/* Featured */}
+      {(activeFilter === "all" || activeFilter === "academic") &&
+        search === "" && (
+          <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-4 sm:mb-5">
+            <div className="h-32 sm:h-40 md:h-52 bg-gradient-to-r from-red-900 via-red-700 to-red-500 flex items-center justify-center text-5xl sm:text-6xl text-white">
+              🎓
             </div>
-            <div style={{ padding: "20px 22px 22px" }}>
-              <h2 style={{ fontSize: 16, fontWeight: 700, color: "#111827", margin: "0 0 10px", lineHeight: 1.4 }}>
+            <div className="p-3 sm:p-4 md:p-6">
+              <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-900">
                 Sabaragamuwa University Launches Smart Campus Initiative 2026
               </h2>
-              <p style={{ fontSize: 13.5, color: "#6b7280", lineHeight: 1.65, margin: "0 0 14px" }}>
-                The university has officially launched its Smart Campus 2026 initiative, introducing digital systems across all faculties including smart attendance, AI-assisted learning, and upgraded Wi-Fi in all lecture halls and hostels in Belihuloya.
+              <p className="text-xs sm:text-sm text-gray-600 mt-1 sm:mt-2">
+                The university has officially launched Smart Campus 2026 with
+                AI-assisted learning and smart attendance systems.
               </p>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-                <span style={{
-                  background: "#eff6ff", color: "#1e40af",
-                  border: "1px solid #93c5fd",
-                  fontSize: 10.5, fontWeight: 700, padding: "2px 9px", borderRadius: 4,
-                }}>Academic</span>
-                <span style={{ fontSize: 12, color: "#9ca3af" }}>
-                  📅 March 1, 2026 · University Administration
-                </span>
-              </div>
+              <p className="text-xs text-gray-400 mt-2 sm:mt-3">
+                📅 March 1, 2026 · University Administration
+              </p>
             </div>
           </div>
         )}
 
-        {/* NEWS LIST */}
-        {filtered.length > 0 ? (
-          filtered.map((item) => (
+      {/* News List */}
+      {filtered.length > 0 ? (
+        <div className="space-y-4">
+          {filtered.map((item) => (
             <div
               key={item.id}
-              style={{
-                background: "#fff",
-                borderRadius: 10,
-                overflow: "hidden",
-                marginBottom: 12,
-                border: "1.5px solid #f3f4f6",
-                display: "flex",
-                cursor: "pointer",
-                boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
-                transition: "box-shadow 0.15s, transform 0.15s",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = "0 4px 16px rgba(127,29,29,0.1)";
-                e.currentTarget.style.transform = "translateY(-1px)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = "0 1px 4px rgba(0,0,0,0.04)";
-                e.currentTarget.style.transform = "translateY(0)";
-              }}
+              className="bg-white rounded-xl shadow-sm overflow-hidden flex flex-col sm:flex-row hover:shadow-md transition"
             >
-              <div style={{
-                width: 120, flexShrink: 0,
-                background: item.accent + "18",
-                borderRight: `3px solid ${item.accent}30`,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 30, minHeight: 100,
-              }}>
+              <div
+                className={`sm:w-32 flex items-center justify-center text-4xl p-6 border-b sm:border-b-0 sm:border-r ${item.accent}`}
+              >
                 {item.icon}
               </div>
-              <div style={{ padding: "14px 18px", display: "flex", flexDirection: "column", justifyContent: "center", gap: 6 }}>
-                <div>
-                  <span style={{ ...item.badgeStyle, fontSize: 10.5, fontWeight: 700, padding: "2px 8px", borderRadius: 4 }}>
-                    {item.badge}
-                  </span>
-                </div>
-                <h3 style={{ fontSize: 13.5, fontWeight: 600, color: "#111827", margin: 0, lineHeight: 1.4 }}>
+
+              <div className="p-4 flex flex-col gap-2">
+                <span className="inline-block text-xs font-semibold bg-gray-100 px-2 py-1 rounded w-fit">
+                  {item.badge}
+                </span>
+
+                <h3 className="text-sm sm:text-base font-semibold text-gray-900">
                   {item.title}
                 </h3>
-                <p style={{ fontSize: 12.5, color: "#6b7280", margin: 0, lineHeight: 1.5 }}>
-                  {item.description}
-                </p>
-                <span style={{ fontSize: 11.5, color: "#9ca3af" }}>
+
+                <p className="text-sm text-gray-600">{item.description}</p>
+
+                <span className="text-xs text-gray-400">
                   📅 {item.date} · {item.source}
                 </span>
               </div>
             </div>
-          ))
-        ) : (
-          <div style={{
-            textAlign: "center", padding: "60px 20px",
-            color: "#9ca3af", background: "#fff",
-            borderRadius: 10, border: "1.5px solid #f3f4f6",
-          }}>
-            <div style={{ fontSize: 40, marginBottom: 12 }}>📭</div>
-            <div style={{ fontSize: 14, fontWeight: 500 }}>No news found for this filter.</div>
-            <div style={{ fontSize: 13, marginTop: 4 }}>Try selecting a different category or clearing your search.</div>
-          </div>
-        )}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="bg-white rounded-xl shadow-sm text-center py-16 px-4">
+          <div className="text-4xl mb-3">📭</div>
+          <p className="font-medium text-gray-500">
+            No news found for this filter.
+          </p>
+          <p className="text-sm text-gray-400 mt-1">
+            Try selecting a different category.
+          </p>
+        </div>
+      )}
     </div>
   );
-};
-
-export default News;
+}
