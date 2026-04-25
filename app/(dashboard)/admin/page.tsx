@@ -1,13 +1,15 @@
 'use client';
 import { useState } from "react";
 
-type AdminTab = "overview" | "users" | "posts" | "knowledge" | "analytics" | "news";
+type AdminTab =
+  | "overview"
+  | "users"
+  | "posts"
+  | "knowledge"
+  | "analytics"
+  | "news";
 
-const PRIMARY = "#7f1d1d";
-const PRIMARY_LIGHT = "#fef2f2";
-const PRIMARY_MID = "#b91c1c";
-
-const ADMIN_TABS: { label: string; value: AdminTab; icon: string }[] = [
+const ADMIN_TABS = [
   { label: "Overview", value: "overview", icon: "📊" },
   { label: "User Management", value: "users", icon: "👥" },
   { label: "Post Moderation", value: "posts", icon: "📋" },
@@ -18,18 +20,12 @@ const ADMIN_TABS: { label: string; value: AdminTab; icon: string }[] = [
 
 const STUDENTS = [
   { index: "22FIS0582", name: "S. Vithuckshana", email: "22fis0582@ms.sab.ac.lk", role: "Student", status: "Active", avatar: "🧑‍🎓" },
-  { index: "22FIS0581", name: "M. Mathurya", email: "22fis0581@ms.sab.ac.lk", role: "Student", status: "Active", avatar: "👨‍💻" },
-  { index: "22FCS0580", name: "R. Abishek", email: "22fcs0580@ms.sab.ac.lk", role: "Student", status: "Active", avatar: "🧑‍💻" },
-  { index: "21FIS0342", name: "K.D. Perera", email: "22fis0342@ms.sab.ac.lk", role: "Student", status: "Active", avatar: "👩‍🎓" },
-  { index: "23FCS0211", name: "R.M. Gunasekara", email: "23fcs0211@ms.sab.ac.lk", role: "Student", status: "Banned", avatar: "🎓" },
   { index: "22FCS0088", name: "S. Vithuckshana B", email: "22fcs0088@ms.sab.ac.lk", role: "Moderator", status: "Active", avatar: "👩‍💻" },
 ];
 
 const POSTS_DATA = [
   { id: 1, author: "S. Vithuckshana", title: "Best food spots near the university?", category: "Campus Life", status: "Active", reports: 0, time: "2h ago" },
-  { id: 2, author: "K.D. Perera", title: "IS3040 Group Assignment — anyone need members?", category: "Academic", status: "Active", reports: 0, time: "5h ago" },
   { id: 3, author: "R.M. Gunasekara", title: "Inappropriate content post example", category: "Q&A", status: "Reported", reports: 3, time: "1d ago" },
-  { id: 4, author: "M. Mathurya", title: "IEEE Student Branch – Open Recruitment 2026", category: "Clubs & Events", status: "Active", reports: 0, time: "2d ago" },
 ];
 
 const CHATBOT_DATA = [
@@ -44,16 +40,25 @@ const CHATBOT_DATA = [
 
 const maxQ = Math.max(...CHATBOT_DATA.map((d) => d.queries));
 
-const StatCard = ({ value, label, sub, subColor }: { value: string | number; label: string; sub: string; subColor?: string }) => (
-  <div style={{
-    background: "#fff", borderRadius: 12, border: "1.5px solid #f3f4f6",
-    boxShadow: "0 1px 4px rgba(0,0,0,0.04)", padding: "20px 24px", flex: 1, minWidth: 160,
-  }}>
-    <div style={{ fontSize: 32, fontWeight: 700, color: subColor === "orange" ? "#d97706" : "#111827", marginBottom: 4 }}>{value}</div>
-    <div style={{ fontSize: 10, fontWeight: 600, color: "#9ca3af", letterSpacing: "1.2px", textTransform: "uppercase", marginBottom: 6 }}>{label}</div>
-    <div style={{ fontSize: 12, color: subColor === "orange" ? "#d97706" : "#16a34a", fontWeight: 500 }}>{sub}</div>
-  </div>
-);
+function StatCard({
+  value,
+  label,
+  sub,
+}: {
+  value: string | number;
+  label: string;
+  sub: string;
+}) {
+  return (
+    <div className="bg-white border rounded-xl p-5 shadow-sm flex-1 min-w-[160px]">
+      <div className="text-2xl font-bold text-gray-900">{value}</div>
+      <div className="text-xs uppercase tracking-widest text-gray-400 mt-1">
+        {label}
+      </div>
+      <div className="text-sm text-green-600 mt-2">{sub}</div>
+    </div>
+  );
+}
 
 export default function Admin() {
   const [activeTab, setActiveTab] = useState<AdminTab>("overview");
@@ -61,354 +66,185 @@ export default function Admin() {
   const [bannedUsers, setBannedUsers] = useState<Set<string>>(new Set(["23FCS0211"]));
   const [removedPosts, setRemovedPosts] = useState<Set<number>>(new Set());
 
-  const filteredStudents = STUDENTS.filter(
-    (s) =>
-      s.name.toLowerCase().includes(userSearch.toLowerCase()) ||
-      s.index.toLowerCase().includes(userSearch.toLowerCase())
+  const filteredStudents = STUDENTS.filter((s) =>
+    s.name.toLowerCase().includes(userSearch.toLowerCase()) ||
+    s.index.toLowerCase().includes(userSearch.toLowerCase())
   );
 
   return (
-    <div style={{ padding: "16px 20px 24px 20px", fontFamily: "'DM Sans','Segoe UI',sans-serif", background: "#fafafa", minHeight: "100vh" }} className="sm:p-5 md:p-7 lg:p-8">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8 font-sans">
 
-      {/* PAGE HEADER */}
-      <div style={{ marginBottom: 16 }} className="sm:mb-5">
-        <h1 style={{ fontSize: 18, fontWeight: 700, color: PRIMARY, margin: 0, letterSpacing: "-0.3px" }} className="sm:text-xl md:text-2xl">
+      {/* HEADER */}
+      <div className="mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold text-red-900">
           Admin Dashboard
         </h1>
-        <p style={{ fontSize: 12, color: "#9ca3af", margin: "4px 0 0" }} className="sm:text-13">
-          Smart UniMate · Mr. D. Patabandi · Administrator
+        <p className="text-xs text-gray-400">
+          Smart UniMate · Administrator Panel
         </p>
       </div>
 
-      {/* TABS - scrollable on mobile */}
-      <div style={{ display: "flex", flexWrap: "nowrap", gap: 0, borderBottom: "2px solid #f3f4f6", marginBottom: 16, overflowX: "auto", paddingBottom: 2 }} className="sm:mb-6 sm:flex-wrap">
-        {ADMIN_TABS.map((t) => {
-          const isActive = activeTab === t.value;
-          return (
-            <button
-              key={t.value}
-              onClick={() => setActiveTab(t.value)}
-              style={{
-                display: "flex", alignItems: "center", gap: 6,
-                padding: "9px 14px", border: "none", background: "transparent",
-                fontFamily: "inherit", fontSize: 13,
-                fontWeight: isActive ? 600 : 400,
-                color: isActive ? PRIMARY : "#6b7280",
-                cursor: "pointer", whiteSpace: "nowrap",
-                borderBottom: isActive ? `2px solid ${PRIMARY}` : "2px solid transparent",
-                marginBottom: "-2px", transition: "all 0.12s",
-              }}
-              onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.color = PRIMARY; }}
-              onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.color = "#6b7280"; }}
-            >
-              <span style={{ fontSize: 14 }}>{t.icon}</span>
-              {t.label}
-            </button>
-          );
-        })}
+      {/* TABS */}
+      <div className="flex overflow-x-auto border-b mb-6 gap-2">
+        {ADMIN_TABS.map((t) => (
+          <button
+            key={t.value}
+            onClick={() => setActiveTab(t.value as AdminTab)}
+            className={`flex items-center gap-2 px-4 py-2 text-sm whitespace-nowrap border-b-2 transition
+              ${activeTab === t.value
+                ? "border-red-700 text-red-700 font-semibold"
+                : "border-transparent text-gray-500"
+              }`}
+          >
+            {t.icon} {t.label}
+          </button>
+        ))}
       </div>
 
-      {/* ── OVERVIEW TAB ── */}
+      {/* OVERVIEW */}
       {activeTab === "overview" && (
-        <div>
-          {/* STAT CARDS */}
-          <div style={{ display: "flex", gap: 10, marginBottom: 16, flexWrap: "wrap" }} className="sm:gap-14 sm:mb-5">
-            <StatCard value="1,248" label="Total Students" sub="↑ 12 this week" />
-            <StatCard value="347" label="Chatbot Queries Today" sub="↑ 23% vs yesterday" />
-            <StatCard value="89" label="Active Posts" sub="↑ 5 new today" />
-            <StatCard value="4" label="Reported Content" sub="Needs Review" subColor="orange" />
+        <div className="space-y-6">
+
+          {/* STATS */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <StatCard value="1,248" label="Students" sub="↑ 12 this week" />
+            <StatCard value="347" label="Queries Today" sub="↑ 23%" />
+            <StatCard value="89" label="Active Posts" sub="↑ 5 today" />
+            <StatCard value="4" label="Reports" sub="Needs review" />
           </div>
 
-          {/* CHARTS ROW */}
-          <div style={{ display: "flex", gap: 10, marginBottom: 16, flexWrap: "wrap" }} className="sm:gap-14 sm:mb-5">
-            {/* Bar Chart */}
-            <div style={{
-              flex: 2, minWidth: 260, background: "#fff", borderRadius: 12,
-              border: "1.5px solid #f3f4f6", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", padding: "16px 20px",
-            }} className="sm:p-5 md:p-6">
-              <p style={{ fontSize: 10, fontWeight: 600, color: "#9ca3af", letterSpacing: "1.5px", textTransform: "uppercase", margin: "0 0 20px" }}>
-                Chatbot Usage — Last 7 Days
-              </p>
-              <div style={{ display: "flex", alignItems: "flex-end", gap: 10, height: 120 }}>
-                {CHATBOT_DATA.map((d) => (
-                  <div key={d.day} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-                    <span style={{ fontSize: 10, color: "#6b7280", fontWeight: 500 }}>{d.queries}</span>
-                    <div style={{
-                      width: "100%", borderRadius: "4px 4px 0 0",
-                      background: `linear-gradient(180deg, ${PRIMARY_MID}, ${PRIMARY})`,
-                      height: `${(d.queries / maxQ) * 90}px`,
-                      transition: "height 0.3s",
-                      opacity: 0.85,
-                    }} />
-                    <span style={{ fontSize: 11, color: "#9ca3af" }}>{d.day}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+          {/* CHART */}
+          <div className="bg-white p-5 rounded-xl border shadow-sm">
+            <h2 className="text-xs uppercase text-gray-400 mb-4">
+              Chatbot Usage
+            </h2>
 
-            {/* Pie Chart (User Roles) */}
-            <div style={{
-              flex: 1, minWidth: 200, background: "#fff", borderRadius: 12,
-              border: "1.5px solid #f3f4f6", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", padding: "20px 24px",
-            }}>
-              <p style={{ fontSize: 10, fontWeight: 600, color: "#9ca3af", letterSpacing: "1.5px", textTransform: "uppercase", margin: "0 0 20px" }}>
-                User Roles
-              </p>
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                {[
-                  { label: "Students", count: 1198, pct: 96, color: PRIMARY },
-                  { label: "Moderators", count: 38, pct: 3, color: "#2563eb" },
-                  { label: "Admins", count: 12, pct: 1, color: "#d97706" },
-                ].map((r) => (
-                  <div key={r.label}>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                      <span style={{ fontSize: 12, color: "#374151", fontWeight: 500 }}>{r.label}</span>
-                      <span style={{ fontSize: 12, color: "#9ca3af" }}>{r.count} ({r.pct}%)</span>
-                    </div>
-                    <div style={{ height: 8, background: "#f3f4f6", borderRadius: 4, overflow: "hidden" }}>
-                      <div style={{ height: "100%", width: `${r.pct}%`, background: r.color, borderRadius: 4 }} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* STUDENT ACCOUNTS TABLE */}
-          <div style={{ background: "#fff", borderRadius: 12, border: "1.5px solid #f3f4f6", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", overflow: "hidden" }}>
-            <div style={{ padding: "12px 16px 10px", borderBottom: "1px solid #f3f4f6", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, flexWrap: "wrap" }}>
-              <p style={{ fontSize: 10, fontWeight: 600, color: "#9ca3af", letterSpacing: "1.5px", textTransform: "uppercase", margin: 0 }}>Student Accounts</p>
-              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                <div style={{ position: "relative" }}>
-                  <span style={{ position: "absolute", left: 8, top: "50%", transform: "translateY(-50%)", color: "#9ca3af", fontSize: 12 }}>🔍</span>
-                  <input
-                    type="text"
-                    placeholder="Search..."
-                    value={userSearch}
-                    onChange={(e) => setUserSearch(e.target.value)}
-                    style={{ padding: "6px 10px 6px 28px", border: "1.5px solid #e5e7eb", borderRadius: 7, fontSize: 12, fontFamily: "inherit", outline: "none", width: 140, color: "#374151" }}
-                    onFocus={(e) => (e.target.style.borderColor = PRIMARY_MID)}
-                    onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
+            <div className="flex items-end gap-3 h-40">
+              {CHATBOT_DATA.map((d) => (
+                <div key={d.day} className="flex-1 flex flex-col items-center">
+                  <div className="text-xs text-gray-500">{d.queries}</div>
+                  <div
+                    className="w-full bg-red-700 rounded-t"
+                    style={{ height: `${(d.queries / maxQ) * 100}%` }}
                   />
+                  <div className="text-xs text-gray-400">{d.day}</div>
                 </div>
-                <button style={{ padding: "6px 12px", background: PRIMARY, color: "#fff", border: "none", borderRadius: 7, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = PRIMARY_MID)}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = PRIMARY)}
-                >+ Add</button>
-              </div>
-            </div>
-            {/* Table header */}
-            <div style={{ display: "grid", gridTemplateColumns: "120px 1fr 1fr 100px 90px 120px", padding: "10px 20px", background: "#f9fafb", borderBottom: "1px solid #f3f4f6" }}>
-              {["Index No", "Name", "Email", "Role", "Status", "Actions"].map((h) => (
-                <span key={h} style={{ fontSize: 10, fontWeight: 700, color: "#9ca3af", letterSpacing: "1px", textTransform: "uppercase" }}>{h}</span>
               ))}
             </div>
-            {filteredStudents.map((s, i) => {
-              const isBanned = bannedUsers.has(s.index);
-              return (
-                <div key={s.index} style={{
-                  display: "grid", gridTemplateColumns: "120px 1fr 1fr 100px 90px 120px",
-                  padding: "12px 20px", borderTop: i === 0 ? "none" : "1px solid #f9fafb",
-                  alignItems: "center", transition: "background 0.1s",
-                }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "#fafafa")}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = "#fff")}
-                >
-                  <span style={{ fontSize: 12.5, color: "#6b7280", fontFamily: "monospace" }}>{s.index}</span>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <span style={{ fontSize: 20 }}>{s.avatar}</span>
-                    <span style={{ fontSize: 13, fontWeight: 500, color: "#111827" }}>{s.name}</span>
-                  </div>
-                  <span style={{ fontSize: 12.5, color: "#6b7280" }}>{s.email}</span>
-                  <span style={{
-                    fontSize: 10.5, fontWeight: 700, padding: "2px 9px", borderRadius: 4, display: "inline-block",
-                    background: s.role === "Moderator" ? "#eff6ff" : "#faf5ff",
-                    color: s.role === "Moderator" ? "#1e40af" : "#6b21a8",
-                    border: s.role === "Moderator" ? "1px solid #93c5fd" : "1px solid #d8b4fe",
-                  }}>{s.role}</span>
-                  <span style={{
-                    fontSize: 10.5, fontWeight: 700, padding: "2px 9px", borderRadius: 4, display: "inline-block",
-                    background: isBanned ? "#fff0f0" : "#f0fdf4",
-                    color: isBanned ? "#991b1b" : "#166534",
-                    border: isBanned ? "1px solid #fca5a5" : "1px solid #86efac",
-                  }}>{isBanned ? "Banned" : "Active"}</span>
-                  <div style={{ display: "flex", gap: 6 }}>
-                    <button style={{ padding: "4px 10px", background: "#fff", color: "#374151", border: "1.5px solid #e5e7eb", borderRadius: 6, fontSize: 11.5, fontWeight: 500, cursor: "pointer", fontFamily: "inherit" }}
-                      onMouseEnter={(e) => (e.currentTarget.style.borderColor = PRIMARY)}
-                      onMouseLeave={(e) => (e.currentTarget.style.borderColor = "#e5e7eb")}
-                    >Edit</button>
+          </div>
+
+          {/* USERS TABLE */}
+          <div className="bg-white border rounded-xl overflow-x-auto">
+            <div className="flex justify-between p-4 border-b flex-wrap gap-2">
+              <input
+                className="border rounded px-3 py-1 text-sm"
+                placeholder="Search..."
+                value={userSearch}
+                onChange={(e) => setUserSearch(e.target.value)}
+              />
+            </div>
+
+            <div className="min-w-[700px]">
+              <div className="grid grid-cols-6 bg-gray-100 text-xs font-bold p-3 text-gray-500">
+                <span>Index</span>
+                <span>Name</span>
+                <span>Email</span>
+                <span>Role</span>
+                <span>Status</span>
+                <span>Action</span>
+              </div>
+
+              {filteredStudents.map((s) => {
+                const banned = bannedUsers.has(s.index);
+
+                return (
+                  <div
+                    key={s.index}
+                    className="grid grid-cols-6 p-3 border-t text-sm items-center hover:bg-gray-50"
+                  >
+                    <span className="font-mono text-gray-500">{s.index}</span>
+                    <span className="flex items-center gap-2">
+                      {s.avatar} {s.name}
+                    </span>
+                    <span className="text-gray-500">{s.email}</span>
+                    <span>{s.role}</span>
+                    <span className={banned ? "text-red-600" : "text-green-600"}>
+                      {banned ? "Banned" : "Active"}
+                    </span>
+
                     <button
-                      onClick={() => setBannedUsers((prev) => { const n = new Set(prev); isBanned ? n.delete(s.index) : n.add(s.index); return n; })}
-                      style={{ padding: "4px 10px", background: "#fff", color: isBanned ? "#16a34a" : "#991b1b", border: `1.5px solid ${isBanned ? "#86efac" : "#fca5a5"}`, borderRadius: 6, fontSize: 11.5, fontWeight: 500, cursor: "pointer", fontFamily: "inherit" }}
-                    >{isBanned ? "Unban" : "Ban"}</button>
+                      onClick={() =>
+                        setBannedUsers((prev) => {
+                          const copy = new Set(prev);
+                          banned ? copy.delete(s.index) : copy.add(s.index);
+                          return copy;
+                        })
+                      }
+                      className="text-xs border px-2 py-1 rounded hover:bg-red-50"
+                    >
+                      {banned ? "Unban" : "Ban"}
+                    </button>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
+
         </div>
       )}
 
-      {/* ── USER MANAGEMENT TAB ── */}
+      {/* USERS TAB */}
       {activeTab === "users" && (
-        <div style={{ background: "#fff", borderRadius: 12, border: "1.5px solid #f3f4f6", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", overflow: "hidden" }}>
-          <div style={{ padding: "16px 20px 12px", borderBottom: "1px solid #f3f4f6" }}>
-            <p style={{ fontSize: 10, fontWeight: 600, color: "#9ca3af", letterSpacing: "1.5px", textTransform: "uppercase", margin: 0 }}>All Users</p>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "120px 1fr 1fr 100px 90px 120px", padding: "10px 20px", background: "#f9fafb", borderBottom: "1px solid #f3f4f6" }}>
-            {["Index No", "Name", "Email", "Role", "Status", "Actions"].map((h) => (
-              <span key={h} style={{ fontSize: 10, fontWeight: 700, color: "#9ca3af", letterSpacing: "1px", textTransform: "uppercase" }}>{h}</span>
-            ))}
-          </div>
-          {STUDENTS.map((s, i) => {
-            const isBanned = bannedUsers.has(s.index);
-            return (
-              <div key={s.index} style={{ display: "grid", gridTemplateColumns: "120px 1fr 1fr 100px 90px 120px", padding: "12px 20px", borderTop: i === 0 ? "none" : "1px solid #f9fafb", alignItems: "center" }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "#fafafa")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "#fff")}
-              >
-                <span style={{ fontSize: 12.5, color: "#6b7280", fontFamily: "monospace" }}>{s.index}</span>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}><span style={{ fontSize: 20 }}>{s.avatar}</span><span style={{ fontSize: 13, fontWeight: 500, color: "#111827" }}>{s.name}</span></div>
-                <span style={{ fontSize: 12.5, color: "#6b7280" }}>{s.email}</span>
-                <span style={{ fontSize: 10.5, fontWeight: 700, padding: "2px 9px", borderRadius: 4, display: "inline-block", background: s.role === "Moderator" ? "#eff6ff" : "#faf5ff", color: s.role === "Moderator" ? "#1e40af" : "#6b21a8", border: s.role === "Moderator" ? "1px solid #93c5fd" : "1px solid #d8b4fe" }}>{s.role}</span>
-                <span style={{ fontSize: 10.5, fontWeight: 700, padding: "2px 9px", borderRadius: 4, display: "inline-block", background: isBanned ? "#fff0f0" : "#f0fdf4", color: isBanned ? "#991b1b" : "#166534", border: isBanned ? "1px solid #fca5a5" : "1px solid #86efac" }}>{isBanned ? "Banned" : "Active"}</span>
-                <div style={{ display: "flex", gap: 6 }}>
-                  <button style={{ padding: "4px 10px", background: "#fff", color: "#374151", border: "1.5px solid #e5e7eb", borderRadius: 6, fontSize: 11.5, fontWeight: 500, cursor: "pointer", fontFamily: "inherit" }}>Edit</button>
-                  <button onClick={() => setBannedUsers((prev) => { const n = new Set(prev); isBanned ? n.delete(s.index) : n.add(s.index); return n; })}
-                    style={{ padding: "4px 10px", background: "#fff", color: isBanned ? "#16a34a" : "#991b1b", border: `1.5px solid ${isBanned ? "#86efac" : "#fca5a5"}`, borderRadius: 6, fontSize: 11.5, fontWeight: 500, cursor: "pointer", fontFamily: "inherit" }}
-                  >{isBanned ? "Unban" : "Ban"}</button>
-                </div>
-              </div>
-            );
-          })}
+        <div className="bg-white border rounded-xl p-4">
+          <h2 className="text-sm font-bold mb-4">All Users</h2>
+          <p className="text-gray-400 text-sm">User management section</p>
         </div>
       )}
 
-      {/* ── POST MODERATION TAB ── */}
+      {/* POSTS TAB */}
       {activeTab === "posts" && (
-        <div style={{ background: "#fff", borderRadius: 12, border: "1.5px solid #f3f4f6", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", overflow: "hidden" }}>
-          <div style={{ padding: "16px 20px 12px", borderBottom: "1px solid #f3f4f6" }}>
-            <p style={{ fontSize: 10, fontWeight: 600, color: "#9ca3af", letterSpacing: "1.5px", textTransform: "uppercase", margin: 0 }}>Post Moderation</p>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 120px 90px 60px 130px", padding: "10px 20px", background: "#f9fafb", borderBottom: "1px solid #f3f4f6" }}>
-            {["Post Title", "Author", "Category", "Reports", "Actions"].map((h) => (
-              <span key={h} style={{ fontSize: 10, fontWeight: 700, color: "#9ca3af", letterSpacing: "1px", textTransform: "uppercase" }}>{h}</span>
-            ))}
-          </div>
-          {POSTS_DATA.filter((p) => !removedPosts.has(p.id)).map((p, i) => (
-            <div key={p.id} style={{ display: "grid", gridTemplateColumns: "1fr 120px 90px 60px 130px", padding: "13px 20px", borderTop: i === 0 ? "none" : "1px solid #f9fafb", alignItems: "center" }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = "#fafafa")}
-              onMouseLeave={(e) => (e.currentTarget.style.background = "#fff")}
-            >
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 500, color: "#111827" }}>{p.title}</div>
-                <div style={{ fontSize: 11.5, color: "#9ca3af", marginTop: 2 }}>{p.time}</div>
-              </div>
-              <span style={{ fontSize: 12.5, color: "#6b7280" }}>{p.author}</span>
-              <span style={{ fontSize: 10.5, fontWeight: 700, padding: "2px 8px", borderRadius: 4, display: "inline-block", background: "#eff6ff", color: "#1e40af", border: "1px solid #93c5fd" }}>{p.category}</span>
-              <span style={{ fontSize: 13, fontWeight: 700, color: p.reports > 0 ? "#991b1b" : "#9ca3af" }}>{p.reports}</span>
-              <div style={{ display: "flex", gap: 6 }}>
-                <button style={{ padding: "4px 10px", background: "#fff", color: "#374151", border: "1.5px solid #e5e7eb", borderRadius: 6, fontSize: 11.5, fontWeight: 500, cursor: "pointer", fontFamily: "inherit" }}>View</button>
-                <button onClick={() => setRemovedPosts((prev) => new Set([...prev, p.id]))}
-                  style={{ padding: "4px 10px", background: "#fff", color: "#991b1b", border: "1.5px solid #fca5a5", borderRadius: 6, fontSize: 11.5, fontWeight: 500, cursor: "pointer", fontFamily: "inherit" }}
-                >Remove</button>
+        <div className="bg-white border rounded-xl p-4 space-y-3">
+          {POSTS_DATA.map((p) => (
+            <div key={p.id} className="border p-3 rounded hover:bg-gray-50">
+              <div className="font-semibold">{p.title}</div>
+              <div className="text-xs text-gray-400">
+                {p.author} · {p.time}
               </div>
             </div>
           ))}
-          {POSTS_DATA.every((p) => removedPosts.has(p.id)) && (
-            <div style={{ textAlign: "center", padding: "40px 20px", color: "#9ca3af", fontSize: 13 }}>✅ All posts reviewed.</div>
-          )}
         </div>
       )}
 
-      {/* ── KNOWLEDGE BASE TAB ── */}
+      {/* KNOWLEDGE TAB */}
       {activeTab === "knowledge" && (
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          {[
-            { q: "What is the deadline for adding/dropping modules?", a: "Module add/drop deadline is the end of Week 2 of each semester.", tag: "Academic" },
-            { q: "How does the GPA grading system work at SUSL?", a: "SUSL uses a 4.0 GPA scale. A = 4.0, B+ = 3.5, B = 3.0, C+ = 2.5, C = 2.0, D = 1.0, F = 0.0.", tag: "Academic" },
-            { q: "How do I report a technical issue with the student portal?", a: "Submit a ticket via the IT Help Desk at it.support@sab.ac.lk or visit the ICT Centre.", tag: "Support" },
-            { q: "Where is the library and what are its opening hours?", a: "The main library is near the Admin block, open Mon–Fri 8AM–8PM and Sat 8AM–1PM.", tag: "Campus" },
-          ].map((kb, i) => (
-            <div key={i} style={{ background: "#fff", borderRadius: 12, border: "1.5px solid #f3f4f6", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", padding: "16px 20px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, marginBottom: 8 }}>
-                <span style={{ fontSize: 13.5, fontWeight: 600, color: "#111827" }}>❓ {kb.q}</span>
-                <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
-                  <span style={{ fontSize: 10.5, fontWeight: 700, padding: "2px 9px", borderRadius: 4, background: "#eff6ff", color: "#1e40af", border: "1px solid #93c5fd" }}>{kb.tag}</span>
-                  <button style={{ padding: "3px 10px", background: "#fff", color: "#374151", border: "1.5px solid #e5e7eb", borderRadius: 6, fontSize: 11.5, cursor: "pointer", fontFamily: "inherit" }}>Edit</button>
-                  <button style={{ padding: "3px 10px", background: "#fff", color: "#991b1b", border: "1.5px solid #fca5a5", borderRadius: 6, fontSize: 11.5, cursor: "pointer", fontFamily: "inherit" }}>Delete</button>
-                </div>
-              </div>
-              <p style={{ fontSize: 13, color: "#6b7280", margin: 0, lineHeight: 1.6 }}>💡 {kb.a}</p>
-            </div>
-          ))}
-          <button style={{ padding: "10px 20px", background: PRIMARY, color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", alignSelf: "flex-start" }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = PRIMARY_MID)}
-            onMouseLeave={(e) => (e.currentTarget.style.background = PRIMARY)}
-          >+ Add Knowledge Entry</button>
+        <div className="bg-white border rounded-xl p-4 text-sm text-gray-600">
+          Knowledge base content here
         </div>
       )}
 
-      {/* ── ANALYTICS & LOGS TAB ── */}
+      {/* ANALYTICS */}
       {activeTab === "analytics" && (
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-          <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
-            <StatCard value="1,248" label="Total Students" sub="↑ 12 this week" />
-            <StatCard value="347" label="Chatbot Queries Today" sub="↑ 23% vs yesterday" />
-            <StatCard value="2,914" label="Total Queries (Month)" sub="↑ 8% vs last month" />
-            <StatCard value="94%" label="Query Resolution Rate" sub="Based on feedback" />
-          </div>
-          <div style={{ background: "#fff", borderRadius: 12, border: "1.5px solid #f3f4f6", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", padding: "20px 24px" }}>
-            <p style={{ fontSize: 10, fontWeight: 600, color: "#9ca3af", letterSpacing: "1.5px", textTransform: "uppercase", margin: "0 0 16px" }}>Recent Activity Log</p>
-            {[
-              { time: "10:42 AM", event: "S. Vithuckshana logged in", type: "info" },
-              { time: "10:38 AM", event: "Post 'Best food spots' received 3 new likes", type: "info" },
-              { time: "09:15 AM", event: "R.M. Gunasekara's post flagged by 2 users", type: "warn" },
-              { time: "08:50 AM", event: "New user registered: 23FCS0299 — A. Malshan", type: "info" },
-              { time: "Yesterday", event: "Admin removed inappropriate post (ID #47)", type: "danger" },
-            ].map((log, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: "10px 0", borderTop: i === 0 ? "none" : "1px solid #f9fafb" }}>
-                <span style={{ fontSize: 10, color: "#9ca3af", whiteSpace: "nowrap", marginTop: 2, minWidth: 70 }}>{log.time}</span>
-                <span style={{ width: 8, height: 8, borderRadius: "50%", flexShrink: 0, marginTop: 5, background: log.type === "danger" ? "#ef4444" : log.type === "warn" ? "#d97706" : "#16a34a" }} />
-                <span style={{ fontSize: 13, color: "#374151" }}>{log.event}</span>
-              </div>
-            ))}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <StatCard value="1,248" label="Students" sub="↑ 12" />
+          <StatCard value="347" label="Queries" sub="↑ 23%" />
+          <StatCard value="94%" label="Success Rate" sub="Stable" />
+          <StatCard value="2.9K" label="Monthly Queries" sub="↑ 8%" />
+        </div>
+      )}
+
+      {/* NEWS */}
+      {activeTab === "news" && (
+        <div className="space-y-3">
+          <button className="bg-red-800 text-white px-4 py-2 rounded">
+            + Add News
+          </button>
+
+          <div className="bg-white border rounded-xl p-4">
+            News management panel
           </div>
         </div>
       )}
 
-      {/* ── NEWS MANAGEMENT TAB ── */}
-      {activeTab === "news" && (
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <button style={{ padding: "9px 20px", background: PRIMARY, color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = PRIMARY_MID)}
-              onMouseLeave={(e) => (e.currentTarget.style.background = PRIMARY)}
-            >+ Add News Article</button>
-          </div>
-          {[
-            { title: "Sabaragamuwa University Launches Smart Campus Initiative 2026", category: "Academic", date: "Mar 1, 2026", source: "University Administration", featured: true },
-            { title: "Mid-Semester Exam Timetable – Semester 2, 2026", category: "Deadline", date: "Mar 3, 2026", source: "Examinations Division", featured: false },
-            { title: "Faculty of Computing Open Day – March 14, 2026", category: "Event", date: "Mar 5, 2026", source: "Faculty of Computing", featured: false },
-            { title: "Career Fair 2026 – Over 40 Companies Participating", category: "Careers", date: "Mar 4, 2026", source: "Career Guidance Unit", featured: false },
-          ].map((article, i) => (
-            <div key={i} style={{ background: "#fff", borderRadius: 12, border: "1.5px solid #f3f4f6", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", padding: "16px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-              <div style={{ flex: 1 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-                  {article.featured && <span style={{ fontSize: 10, fontWeight: 700, background: "#fef08a", color: "#713f12", padding: "1px 7px", borderRadius: 4 }}>⭐ FEATURED</span>}
-                  <span style={{ fontSize: 10.5, fontWeight: 700, padding: "1px 8px", borderRadius: 4, background: "#eff6ff", color: "#1e40af", border: "1px solid #93c5fd" }}>{article.category}</span>
-                </div>
-                <div style={{ fontSize: 13.5, fontWeight: 600, color: "#111827", marginBottom: 3 }}>{article.title}</div>
-                <div style={{ fontSize: 11.5, color: "#9ca3af" }}>📅 {article.date} · {article.source}</div>
-              </div>
-              <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
-                <button style={{ padding: "6px 12px", background: "#fff", color: "#374151", border: "1.5px solid #e5e7eb", borderRadius: 7, fontSize: 12, fontWeight: 500, cursor: "pointer", fontFamily: "inherit" }}>Edit</button>
-                <button style={{ padding: "6px 12px", background: "#fff", color: "#991b1b", border: "1.5px solid #fca5a5", borderRadius: 7, fontSize: 12, fontWeight: 500, cursor: "pointer", fontFamily: "inherit" }}>Delete</button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 }
