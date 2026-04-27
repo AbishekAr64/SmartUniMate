@@ -93,7 +93,7 @@ export default function Community() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 p-3 sm:p-4 md:p-6 lg:p-8 font-sans">
+    <div className="min-h-screen bg-gray-50 p-3 sm:p-4 md:p-6 lg:p-8 font-sans w-full">
       {/* Header */}
       <div className="mb-4 sm:mb-5">
         <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-red-900">
@@ -104,15 +104,15 @@ export default function Community() {
         </p>
       </div>
 
-      {/* Categories - scrollable on mobile */}
-      <div className="flex gap-2 border-b border-gray-200 pb-2 overflow-x-auto pb-3 -mx-3 px-3 sm:px-0 sm:flex-wrap">
+      {/* Categories */}
+      <div className="flex gap-2 border-b border-gray-200 pb-2 overflow-x-auto -mx-3 px-3 sm:px-0 sm:flex-wrap">
         {CATEGORIES.map((c) => {
           const isActive = activeCategory === c.value;
           return (
             <button
               key={c.value}
               onClick={() => setActiveCategory(c.value as Category)}
-              className={`px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm transition whitespace-nowrap ${
+              className={`flex-shrink-0 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm transition whitespace-nowrap ${
                 isActive
                   ? "bg-red-900 text-white"
                   : "bg-white text-gray-600 border"
@@ -130,7 +130,7 @@ export default function Community() {
           <button
             key={s.value}
             onClick={() => setSortBy(s.value as SortBy)}
-            className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full border bg-white text-xs sm:text-sm"
+            className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full border bg-white text-xs sm:text-sm flex-shrink-0"
           >
             {s.icon} {s.label}
           </button>
@@ -138,50 +138,47 @@ export default function Community() {
       </div>
 
       {/* Compose */}
-      <div className="bg-white rounded-xl shadow-sm p-3 sm:p-4 flex flex-col md:flex-row gap-2 sm:gap-3 mb-4 sm:mb-5">
+      <div className="bg-white rounded-xl shadow-sm p-3 sm:p-4 flex flex-col md:flex-row gap-2 sm:gap-3 mb-4 sm:mb-5 w-full">
         <div className="text-xl sm:text-2xl">👩‍💻</div>
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 flex-1">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 flex-1 w-full">
           <input
             type="text"
             value={postText}
             onChange={(e) => setPostText(e.target.value)}
             placeholder="What's on your mind?"
-            className="flex-1 border rounded-lg px-3 sm:px-4 py-2 text-xs sm:text-sm outline-none min-w-0"
+            className="w-full flex-1 border rounded-lg px-3 sm:px-4 py-2 text-xs sm:text-sm outline-none"
           />
-          <button className="bg-red-900 text-white px-4 sm:px-5 py-2 rounded-lg text-xs sm:text-sm">
+          <button className="w-full sm:w-auto bg-red-900 text-white px-4 sm:px-5 py-2 rounded-lg text-xs sm:text-sm">
             Post
           </button>
         </div>
       </div>
 
       {/* Posts */}
-      <div className="space-y-4">
+      <div className="space-y-4 w-full">
         {filtered.map((post) => {
           const liked = likedPosts.has(post.id);
 
           return (
             <div
               key={post.id}
-              className="bg-white rounded-xl shadow-sm overflow-hidden"
+              className="bg-white rounded-xl shadow-sm overflow-hidden w-full"
             >
               <div className="p-4">
-                {/* Post Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                   <div>
-                    <h3 className="font-semibold text-gray-900">
+                    <h3 className="font-semibold text-gray-900 break-words">
                       {post.author}
                     </h3>
                     <p className="text-xs text-gray-400 break-words">
-                      {post.timeAgo} · {post.studentId} · {post.year}{" "}
-                      {post.program}
+                      {post.timeAgo} · {post.studentId} · {post.year} {post.program}
                     </p>
                   </div>
-                  <span className="text-xs bg-gray-100 px-2 py-1 rounded">
+                  <span className="text-xs bg-gray-100 px-2 py-1 rounded self-start sm:self-auto">
                     {post.category}
                   </span>
                 </div>
 
-                {/* Content */}
                 <h2 className="mt-3 text-base sm:text-lg font-bold text-gray-900 break-words">
                   {post.title}
                 </h2>
@@ -190,7 +187,6 @@ export default function Community() {
                 </p>
               </div>
 
-              {/* Image */}
               {post.image && (
                 <img
                   src={post.image}
@@ -199,7 +195,6 @@ export default function Community() {
                 />
               )}
 
-              {/* Footer */}
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 border-t">
                 <div className="flex flex-wrap gap-2">
                   <button
@@ -222,7 +217,7 @@ export default function Community() {
                   </button>
                 </div>
 
-                <button className="px-3 py-1 rounded-lg border border-red-200 text-red-500 text-sm">
+                <button className="px-3 py-1 rounded-lg border border-red-200 text-red-500 text-sm self-start sm:self-auto">
                   🚩 Report
                 </button>
               </div>

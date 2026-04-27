@@ -12,7 +12,7 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
     <ThemeProvider>
       <Header setSidebarOpen={setSidebarOpen} sidebarOpen={sidebarOpen}/>
 
-      <div className="flex">
+      <div className="flex flex-col sm:flex-row">
         <Sidebar
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
