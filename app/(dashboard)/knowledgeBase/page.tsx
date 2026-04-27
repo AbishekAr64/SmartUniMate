@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 
-const PRIMARY = "text-red-900";
-const PRIMARY_BG = "bg-red-900";
-const PRIMARY_HOVER = "hover:bg-red-700";
+const PRIMARY = "text-red-900 dark:text-red-400";
+const PRIMARY_BG = "bg-red-900 dark:bg-red-800";
+const PRIMARY_HOVER = "hover:bg-red-700 dark:hover:bg-red-600";
 
 type AdminTab =
   | "overview"
@@ -102,25 +102,28 @@ export default function KnowledgeBase() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-3 sm:p-4 md:p-6 lg:p-8 font-sans">
+    <div className="bg-gray-50 dark:bg-stone-950 p-3 sm:p-4 md:p-6 lg:p-8 font-sans">
+
       {/* Header */}
       <div className="mb-4 sm:mb-6">
-        <h1 className={`text-lg sm:text-xl md:text-2xl font-bold ${PRIMARY}`}>Admin Dashboard</h1>
-        <p className="text-xs sm:text-sm text-gray-400">
+        <h1 className={`text-lg sm:text-xl md:text-2xl font-bold ${PRIMARY}`}>
+          Admin Dashboard
+        </h1>
+        <p className="text-xs sm:text-sm text-gray-400 dark:text-stone-400">
           Smart UniMate · Mr. D. Patabandi · Administrator
         </p>
       </div>
 
-      {/* Tabs - scrollable on mobile */}
-      <div className="flex gap-1 border-b border-gray-200 mb-4 sm:mb-6 overflow-x-auto pb-2 -mx-3 px-3 sm:px-0 sm:flex-wrap">
+      {/* Tabs */}
+      <div className="flex gap-1 border-b border-gray-200 dark:border-stone-800 mb-4 sm:mb-6 overflow-x-auto pb-2 -mx-3 px-3 sm:px-0">
         {ADMIN_TABS.map((t) => (
           <button
             key={t.value}
             onClick={() => setActiveTab(t.value as AdminTab)}
             className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-2 text-xs sm:text-sm whitespace-nowrap border-b-2 transition ${
               activeTab === t.value
-                ? "border-red-900 text-red-900 font-semibold"
-                : "border-transparent text-gray-500 hover:text-red-900"
+                ? "border-red-900 text-red-900 dark:text-red-400 font-semibold"
+                : "border-transparent text-gray-500 dark:text-stone-300 hover:text-red-900 dark:hover:text-red-400"
             }`}
           >
             <span className="text-sm">{t.icon}</span>
@@ -140,11 +143,14 @@ export default function KnowledgeBase() {
             ].map((a) => (
               <button
                 key={a.label}
-                className="bg-white border-2 border-dashed border-gray-300 rounded-xl p-4 sm:p-6 hover:border-red-900 hover:bg-red-50 transition flex flex-col items-center"
+                className="w-full text-left bg-white dark:bg-stone-900 border-2 border-dashed border-gray-300 dark:border-stone-700 rounded-xl p-4 sm:p-6 hover:border-red-900 dark:hover:border-red-400 hover:bg-red-50 dark:hover:bg-stone-800 transition flex flex-col items-start"
               >
-                <span className="text-2xl sm:text-3xl">{a.icon}</span>
-                <span className="mt-1.5 sm:mt-2 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-500 text-center">
-                  {a.label}
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl sm:text-3xl">{a.icon}</span>
+                  <span className="mt-0.5 sm:mt-0 text-sm font-semibold text-gray-900 dark:text-white">{a.label}</span>
+                </div>
+                <span className="mt-2 text-[10px] sm:text-xs text-gray-500 dark:text-stone-400">
+                  Quick action
                 </span>
               </button>
             ))}
@@ -161,7 +167,7 @@ export default function KnowledgeBase() {
                 placeholder="Search..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-9 sm:pl-10 pr-3 sm:pr-4 py-2 text-xs sm:text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-700"
+                className="w-full pl-9 sm:pl-10 pr-3 sm:pr-4 py-2 text-xs sm:text-sm border rounded-lg bg-white dark:bg-stone-900 text-gray-900 dark:text-white dark:border-stone-700 focus:outline-none focus:ring-2 focus:ring-red-700"
               />
             </div>
             <button
@@ -171,9 +177,9 @@ export default function KnowledgeBase() {
             </button>
           </div>
 
-          {/* Table/Desktop */}
-          <div className="hidden md:block bg-white rounded-xl border shadow-sm overflow-hidden">
-            <div className="grid grid-cols-6 bg-slate-900 text-gray-300 text-xs font-bold uppercase tracking-wider px-5 py-3">
+          {/* Desktop Table */}
+          <div className="hidden md:block bg-white dark:bg-stone-900 rounded-xl border dark:border-stone-800 shadow-sm overflow-x-auto">
+            <div className="grid grid-cols-6 bg-gray-100 dark:bg-stone-800 text-gray-600 dark:text-stone-200 text-xs font-bold uppercase tracking-wider px-5 py-3">
               <span>Category</span>
               <span>Title</span>
               <span>Source</span>
@@ -185,87 +191,41 @@ export default function KnowledgeBase() {
             {filtered.map((entry) => (
               <div
                 key={entry.id}
-                className="grid grid-cols-6 px-5 py-4 border-t items-center text-sm hover:bg-gray-50"
+                className="grid grid-cols-6 px-5 py-4 border-t dark:border-stone-800 items-center text-sm hover:bg-gray-50 dark:hover:bg-stone-800"
               >
                 <span>{entry.category}</span>
                 <div>
-                  <p className="font-semibold">{entry.title}</p>
-                  <p className="text-xs text-gray-400">{entry.sourceMeta}</p>
+                    <p className="font-semibold break-words">{entry.title}</p>
+                  <p className="text-xs text-gray-400 dark:text-stone-400">
+                    {entry.sourceMeta}
+                  </p>
                 </div>
-                <span>{entry.source}</span>
-                <span>{entry.lastUpdated}</span>
+                  <span className="text-gray-700 dark:text-stone-300 break-words">{entry.source}</span>
+                  <span className="text-gray-700 dark:text-stone-300">{entry.lastUpdated}</span>
                 <span
                   className={`text-xs px-2 py-1 rounded w-fit ${
                     entry.status === "Active"
-                      ? "bg-green-100 text-green-700"
-                      : "bg-yellow-100 text-yellow-700"
+                      ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"
+                      : "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400"
                   }`}
                 >
                   {entry.status}
                 </span>
                 <div className="flex gap-2">
-                  <button className="border px-3 py-1 rounded">Edit</button>
-                  {entry.status === "Draft" ? (
-                    <button
-                      onClick={() => publishEntry(entry.id)}
-                      className="border border-green-400 text-green-700 px-3 py-1 rounded"
-                    >
-                      Publish
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => deleteEntry(entry.id)}
-                      className="border border-red-400 text-red-700 px-3 py-1 rounded"
-                    >
-                      Delete
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Mobile cards */}
-          <div className="md:hidden space-y-4">
-            {filtered.map((entry) => (
-              <div
-                key={entry.id}
-                className="bg-white rounded-xl border shadow-sm p-4"
-              >
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
-                    {entry.category}
-                  </span>
-                  <span
-                    className={`text-xs px-2 py-1 rounded ${
-                      entry.status === "Active"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-yellow-100 text-yellow-700"
-                    }`}
-                  >
-                    {entry.status}
-                  </span>
-                </div>
-                <h3 className="font-semibold">{entry.title}</h3>
-                <p className="text-xs text-gray-400 mt-1">{entry.sourceMeta}</p>
-                <p className="text-sm text-gray-600 mt-2">{entry.source}</p>
-                <p className="text-xs text-gray-400 mt-1">{entry.lastUpdated}</p>
-
-                <div className="flex gap-2 mt-4">
-                  <button className="border px-3 py-1 rounded text-sm">
+                  <button className="border dark:border-stone-700 px-3 py-1 rounded">
                     Edit
                   </button>
                   {entry.status === "Draft" ? (
                     <button
                       onClick={() => publishEntry(entry.id)}
-                      className="border border-green-400 text-green-700 px-3 py-1 rounded text-sm"
+                      className="border border-green-400 text-green-700 dark:text-green-400 px-3 py-1 rounded"
                     >
                       Publish
                     </button>
                   ) : (
                     <button
                       onClick={() => deleteEntry(entry.id)}
-                      className="border border-red-400 text-red-700 px-3 py-1 rounded text-sm"
+                      className="border border-red-400 text-red-700 dark:text-red-400 px-3 py-1 rounded"
                     >
                       Delete
                     </button>
@@ -275,23 +235,76 @@ export default function KnowledgeBase() {
             ))}
           </div>
 
-          {/* Retrain Banner */}
-          <div className="mt-4 sm:mt-6 bg-white rounded-xl border shadow-sm p-4 sm:p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
-            <div>
-              <h3
-                className={`font-bold ${
-                  retrained ? "text-green-700" : "text-purple-700"
-                }`}
+          {/* Mobile Cards */}
+          <div className="md:hidden space-y-4">
+            {filtered.map((entry) => (
+              <div
+                key={entry.id}
+                className="bg-white dark:bg-stone-900 rounded-xl border dark:border-stone-800 shadow-sm p-4"
               >
-                🧠{" "}
-                {retrained
-                  ? "Chatbot Successfully Retrained!"
-                  : "Retrain Chatbot with Updated Knowledge"}
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-2 py-1 rounded">
+                    {entry.category}
+                  </span>
+                  <span
+                    className={`text-xs px-2 py-1 rounded ${
+                      entry.status === "Active"
+                        ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"
+                        : "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400"
+                    }`}
+                  >
+                    {entry.status}
+                  </span>
+                </div>
+
+                <h3 className="font-semibold text-gray-900 dark:text-white">
+                  {entry.title}
+                </h3>
+
+                <p className="text-xs text-gray-400 dark:text-stone-400 mt-1">
+                  {entry.sourceMeta}
+                </p>
+
+                <p className="text-sm text-gray-600 dark:text-stone-300 mt-2">
+                  {entry.source}
+                </p>
+
+                <p className="text-xs text-gray-400 dark:text-stone-400 mt-1">
+                  {entry.lastUpdated}
+                </p>
+
+                <div className="flex gap-2 mt-4">
+                  <button className="border dark:border-stone-700 px-3 py-1 rounded text-sm">
+                    Edit
+                  </button>
+                  {entry.status === "Draft" ? (
+                    <button
+                      onClick={() => publishEntry(entry.id)}
+                      className="border border-green-400 text-green-700 dark:text-green-400 px-3 py-1 rounded text-sm"
+                    >
+                      Publish
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => deleteEntry(entry.id)}
+                      className="border border-red-400 text-red-700 dark:text-red-400 px-3 py-1 rounded text-sm"
+                    >
+                      Delete
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Retrain */}
+          <div className="mt-4 sm:mt-6 bg-white dark:bg-stone-900 rounded-xl border dark:border-stone-800 shadow-sm p-4 sm:p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+            <div>
+              <h3 className={`font-bold ${retrained ? "text-green-700 dark:text-green-400" : "text-purple-700 dark:text-purple-400"}`}>
+                🧠 {retrained ? "Chatbot Successfully Retrained!" : "Retrain Chatbot with Updated Knowledge"}
               </h3>
-              <p className="text-sm text-gray-400">
-                {retrained
-                  ? "Updated successfully."
-                  : "Last trained: March 3, 2026"}
+              <p className="text-sm text-gray-400 dark:text-stone-400">
+                {retrained ? "Updated successfully." : "Last trained: March 3, 2026"}
               </p>
             </div>
 
@@ -302,24 +315,20 @@ export default function KnowledgeBase() {
                 retraining
                   ? "bg-gray-500"
                   : retrained
-                  ? "bg-green-700"
-                  : "bg-red-900 hover:bg-red-700"
+                  ? "bg-green-700 dark:bg-green-600"
+                  : "bg-red-900 dark:bg-red-800 hover:bg-red-700 dark:hover:bg-red-600"
               }`}
             >
-              {retraining
-                ? "⏳ Retraining..."
-                : retrained
-                ? "✅ Retrain Again"
-                : "🔄 Retrain Chatbot"}
+              {retraining ? "⏳ Retraining..." : retrained ? "✅ Retrain Again" : "🔄 Retrain Chatbot"}
             </button>
           </div>
         </>
       ) : (
-        <div className="bg-white rounded-xl border shadow-sm p-12 text-center text-gray-400">
+        <div className="bg-white dark:bg-stone-900 rounded-xl border dark:border-stone-800 shadow-sm p-12 text-center text-gray-400 dark:text-stone-400">
           <div className="text-4xl mb-3">
             {ADMIN_TABS.find((t) => t.value === activeTab)?.icon}
           </div>
-          <p className="font-semibold text-gray-700">
+          <p className="font-semibold text-gray-700 dark:text-stone-200">
             {ADMIN_TABS.find((t) => t.value === activeTab)?.label}
           </p>
           <p className="text-sm mt-1">This section is under construction.</p>

@@ -20,7 +20,7 @@ export default function NotificationPanel({ open, onClose }: { open: boolean; on
         <h3 className="font-semibold text-sm sm:text-base">Notifications</h3>
         <button
           onClick={onClose}
-          className="text-stone-400 hover:text-stone-700 transition"
+          className="text-stone-400 hover:text-stone-700 dark:text-stone-300 dark:hover:text-stone-100 transition"
         >
           <X size={16} />
         </button>

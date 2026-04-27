@@ -18,8 +18,8 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
           setSidebarOpen={setSidebarOpen}
         />
 
-        <main className="flex-1 p-5">
-          {children}
+        <main className="flex-1 px-3 py-4 sm:px-5 sm:py-5 md:px-6 md:py-6 lg:px-8 lg:py-8">
+          <div className="max-w-[1200px] mx-auto">{children}</div>
         </main>
       </div>
     </ThemeProvider>

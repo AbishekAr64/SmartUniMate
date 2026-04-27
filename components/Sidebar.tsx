@@ -48,7 +48,7 @@ export default function Sidebar({
 
       <aside
         className={`fixed sm:sticky top-[60px] left-0 z-50 sm:z-auto
-        w-[200px] md:w-[220px] min-w-[200px] md:min-w-[220px]
+        w-full sm:w-[200px] md:w-[220px] min-w-0 sm:min-w-[200px] md:min-w-[220px]
         h-[calc(100vh-60px)] overflow-y-auto px-2 md:px-3 py-4 md:py-5
         bg-white dark:bg-stone-900 border-r border-stone-100 dark:border-stone-800
         transform transition-transform duration-300
@@ -57,7 +57,7 @@ export default function Sidebar({
       >
         {/* Close button for mobile */}
         <div className="flex justify-end sm:hidden mb-2">
-          <button onClick={() => setSidebarOpen(false)} className="text-stone-400 hover:text-[#7f1d1d] transition">
+          <button onClick={() => setSidebarOpen(false)} className="text-stone-400 hover:text-[#7f1d1d] dark:hover:text-white transition">
             <X size={20} />
           </button>
         </div>

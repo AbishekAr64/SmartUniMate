@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type Category = "all" | "academic" | "campus" | "clubs" | "tips" | "qna";
 type SortBy = "recent" | "liked" | "mine";
@@ -18,6 +18,7 @@ interface Post {
   image?: string;
   likes: number;
   comments: number;
+  commentsList?: string[];
   avatar: string;
 }
 
@@ -36,6 +37,10 @@ const POSTS: Post[] = [
       "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&q=80",
     likes: 24,
     comments: 8,
+    commentsList: [
+      "Try the canteen samosas!",
+      "I recommend the new cafe on Oak St.",
+    ],
     avatar: "🧑‍🎓",
   },
   {
@@ -50,6 +55,7 @@ const POSTS: Post[] = [
     body: "Our group has space for one more person...",
     likes: 11,
     comments: 5,
+    commentsList: ["I'm interested! DM me.", "What topics do you cover?"],
     avatar: "👨‍💻",
   },
 ];
@@ -74,6 +80,16 @@ export default function Community() {
   const [sortBy, setSortBy] = useState<SortBy>("recent");
   const [postText, setPostText] = useState("");
   const [likedPosts, setLikedPosts] = useState<Set<number>>(new Set());
+  const [posts, setPosts] = useState<Post[]>(() => {
+    try {
+      const raw = typeof window !== 'undefined' ? localStorage.getItem('community_posts') : null;
+      if (raw) return JSON.parse(raw) as Post[];
+    } catch (e) {}
+    return POSTS;
+  });
+  const [activeCommentPostId, setActiveCommentPostId] = useState<number | null>(null);
+  const [commentInputs, setCommentInputs] = useState<Record<number, string>>({});
+  const [toast, setToast] = useState<string | null>(null);
 
   const toggleLike = (id: number) => {
     setLikedPosts((prev) => {
@@ -83,17 +99,78 @@ export default function Community() {
     });
   };
 
-  const filtered = POSTS.filter((p) => {
-    if (sortBy === "mine") return p.author === "S. Vithuckshana";
-    if (activeCategory !== "all") return p.category === activeCategory;
-    return true;
-  }).sort((a, b) => {
-    if (sortBy === "liked") return b.likes - a.likes;
-    return b.id - a.id;
-  });
+  const filtered = posts
+    .filter((p) => {
+      if (sortBy === "mine") return p.author === "S. Vithuckshana";
+      if (activeCategory !== "all") return p.category === activeCategory;
+      return true;
+    })
+    .sort((a, b) => {
+      if (sortBy === "liked") return b.likes - a.likes;
+      return b.id - a.id;
+    });
+
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(null), 2000);
+    return () => clearTimeout(t);
+  }, [toast]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('community_posts', JSON.stringify(posts));
+    } catch (e) {}
+  }, [posts]);
+
+  const toggleComments = (id: number) => {
+    setActiveCommentPostId((prev) => (prev === id ? null : id));
+  };
+
+  const handleCommentChange = (id: number, value: string) => {
+    setCommentInputs((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const addComment = (id: number) => {
+    const text = (commentInputs[id] || "").trim();
+    if (!text) return;
+    setPosts((prev) =>
+      prev.map((p) =>
+        p.id === id
+          ? {
+              ...p,
+              comments: p.comments + 1,
+              commentsList: [...(p.commentsList || []), text],
+            }
+          : p
+      )
+    );
+    setCommentInputs((prev) => ({ ...prev, [id]: "" }));
+    setToast("Comment added");
+  };
+
+  const handleShare = async (post: Post) => {
+    const shareUrl = window.location.href.split('#')[0] + `#post-${post.id}`;
+    const shareData = { title: post.title, text: post.body, url: shareUrl };
+    try {
+      if ((navigator as any).share) {
+        await (navigator as any).share(shareData);
+        setToast("Shared successfully");
+      } else if (navigator.clipboard) {
+        await navigator.clipboard.writeText(shareUrl);
+        setToast("Link copied to clipboard");
+      } else {
+        setToast("Cannot share on this browser");
+      }
+    } catch (e) {
+      setToast("Share failed");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-3 sm:p-4 md:p-6 lg:p-8 font-sans w-full">
+      {toast && (
+        <div className="fixed top-4 right-4 z-50 bg-black text-white px-3 py-2 rounded">{toast}</div>
+      )}
       {/* Header */}
       <div className="mb-4 sm:mb-5">
         <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-red-900">
@@ -161,9 +238,10 @@ export default function Community() {
 
           return (
             <div
-              key={post.id}
-              className="bg-white rounded-xl shadow-sm overflow-hidden w-full"
-            >
+                id={`post-${post.id}`}
+                key={post.id}
+                className="bg-white rounded-xl shadow-sm overflow-hidden w-full"
+              >
               <div className="p-4">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                   <div>
@@ -208,11 +286,17 @@ export default function Community() {
                     🔥 {post.likes + (liked ? 1 : 0)}
                   </button>
 
-                  <button className="px-3 py-1 rounded-lg border text-sm text-gray-600">
+                  <button
+                    onClick={() => toggleComments(post.id)}
+                    className="px-3 py-1 rounded-lg border text-sm text-gray-600"
+                  >
                     💬 {post.comments}
                   </button>
 
-                  <button className="px-3 py-1 rounded-lg border text-sm text-gray-600">
+                  <button
+                    onClick={() => handleShare(post)}
+                    className="px-3 py-1 rounded-lg border text-sm text-gray-600"
+                  >
                     🔗 Share
                   </button>
                 </div>
@@ -221,6 +305,36 @@ export default function Community() {
                   🚩 Report
                 </button>
               </div>
+              {activeCommentPostId === post.id && (
+                <div className="p-4 border-t bg-gray-50">
+                  <div className="space-y-2">
+                    {post.commentsList && post.commentsList.length > 0 ? (
+                      post.commentsList.map((c, i) => (
+                        <p key={i} className="text-sm text-gray-700">
+                          {c}
+                        </p>
+                      ))
+                    ) : (
+                      <p className="text-sm text-gray-500">No comments yet</p>
+                    )}
+                  </div>
+
+                  <div className="mt-3 flex gap-2">
+                    <input
+                      value={commentInputs[post.id] || ""}
+                      onChange={(e) => handleCommentChange(post.id, e.target.value)}
+                      placeholder="Write a comment..."
+                      className="flex-1 border rounded-lg px-3 py-2 text-sm outline-none"
+                    />
+                    <button
+                      onClick={() => addComment(post.id)}
+                      className="bg-red-900 text-white px-3 py-2 rounded-lg text-sm"
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           );
         })}

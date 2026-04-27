@@ -2,21 +2,6 @@
 
 import { useState, useRef, useEffect } from "react";
 
-const BOT_RESPONSES: Record<string, string> = {
-  "course info":
-    "For Semester 2, 2026, you can view all available modules via the Student Portal. Module registration closes on **March 10, 2026**.",
-  "campus map":
-    "The Belihuloya Campus has 5 main faculties. The Faculty of Computing is near the main gate.",
-  "admin office":
-    "The Administration Office is open Mon–Fri, 8:00 AM – 4:30 PM.",
-  "deadlines":
-    "📅 Key deadlines:\n• Module registration: March 10, 2026\n• Mid-sem exams: March 22–28, 2026",
-  "faculty contacts":
-    "📞 Faculty of Computing contacts available in the directory.",
-  default:
-    "That's a great question! Could you provide more details so I can help better?",
-};
-
 const QUICK_CHIPS = [
   { label: "Course Info", icon: "📘" },
   { label: "Campus Map", icon: "🗺️" },
@@ -50,7 +35,7 @@ function renderText(text: string) {
 }
 
 export default function Chat() {
-  const [conversations, setConversations] = useState(INITIAL_CONVERSATIONS);
+  const [conversations] = useState(INITIAL_CONVERSATIONS);
   const [messages, setMessages] = useState(INITIAL_MESSAGES);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -62,38 +47,64 @@ export default function Chat() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
 
-  const sendMessage = (text: string) => {
+  // ✅ GEMINI AI INTEGRATION (via route.ts)
+  const sendMessage = async (text: string) => {
     const trimmed = text.trim();
     if (!trimmed) return;
 
     const currentId = nextId;
 
-    setMessages((prev) => [...prev, { id: currentId, role: "user", text: trimmed }]);
+    // user message
+    setMessages((prev) => [
+      ...prev,
+      { id: currentId, role: "user", text: trimmed },
+    ]);
+
     setNextId((n) => n + 1);
     setInput("");
     setIsTyping(true);
 
-    setTimeout(() => {
-      const key =
-        Object.keys(BOT_RESPONSES).find((k) =>
-          trimmed.toLowerCase().includes(k)
-        ) ?? "default";
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: trimmed }),
+      });
+
+      const data = await res.json();
 
       setMessages((prev) => [
         ...prev,
-        { id: currentId + 1, role: "bot", text: BOT_RESPONSES[key] },
+        {
+          id: currentId + 1,
+          role: "bot",
+          text: data.reply || "No response from AI.",
+        },
       ]);
+
       setNextId((n) => n + 1);
+    } catch (error) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: currentId + 1,
+          role: "bot",
+          text: "⚠️ Error connecting to AI. Please try again.",
+        },
+      ]);
+    } finally {
       setIsTyping(false);
-    }, 1000 + Math.random() * 1000);
+    }
   };
 
   return (
-    <div className="flex h-[calc(100vh-60px)] bg-gray-50 overflow-hidden font-sans">
+    <div className="flex h-[calc(100vh-60px)] bg-gray-50 overflow-hidden font-sans dark:bg-stone-900">
 
       {/* Sidebar */}
       <div
-        className={`fixed md:sticky md:top-[60px] z-30 inset-y-0 left-0 w-64 bg-white border-r transform transition-transform duration-300
+        className={`fixed dark:bg-stone-800 md:sticky md:top-[60px] z-30 inset-y-0 left-0 w-64 bg-white border-r transform transition-transform duration-300
         ${showSidebar ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 md:flex flex-col`}
       >
         <div className="p-3 sm:p-4 border-b">
@@ -133,10 +144,10 @@ export default function Chat() {
       )}
 
       {/* Main */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 dark:bg-stone-900">
 
         {/* Header */}
-        <div className="bg-white border-b px-3 sm:px-4 md:px-5 py-2 sm:py-3 flex items-center justify-between gap-2">
+        <div className="bg-white dark:bg-stone-800 border-b px-3 sm:px-4 md:px-5 py-2 sm:py-3 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 sm:gap-3">
             <button
               onClick={() => setShowSidebar(true)}
@@ -148,17 +159,22 @@ export default function Chat() {
               🤖
             </div>
             <div>
-              <div className="font-bold text-gray-900 text-sm sm:text-base">UniMate AI Assistant</div>
-              <div className="text-xs text-gray-400 hidden sm:block">Online</div>
+              <div className="font-bold text-gray-900 text-sm sm:text-base dark:text-white">
+                UniMate AI Assistant
+              </div>
+              <div className="text-xs text-gray-400 hidden sm:block dark:text-gray-500">
+                Online
+              </div>
             </div>
           </div>
+
           <div className="hidden sm:block text-xs bg-yellow-50 text-yellow-700 border border-yellow-300 px-2 sm:px-3 py-1 rounded-full">
-            Response &lt; 3s
+            Gemini AI Powered
           </div>
         </div>
 
         {/* Chips */}
-        <div className="flex flex-wrap gap-1.5 sm:gap-2 px-3 sm:px-4 md:px-5 py-2 sm:py-3 bg-white border-b">
+        <div className="flex dark:bg-stone-800 flex-wrap gap-1.5 sm:gap-2 px-3 sm:px-4 md:px-5 py-2 sm:py-3 bg-white border-b">
           {QUICK_CHIPS.map((chip) => (
             <button
               key={chip.label}
@@ -182,7 +198,7 @@ export default function Chat() {
               <div
                 className={`px-4 py-3 text-sm leading-6 ${
                   msg.role === "bot"
-                    ? "bg-white border rounded-2xl rounded-tl-sm"
+                    ? "bg-white border rounded-2xl rounded-tl-sm dark:bg-stone-800 dark:border-stone-700"
                     : "bg-gradient-to-r from-red-900 to-red-700 text-white rounded-2xl rounded-tr-sm"
                 }`}
               >
@@ -194,7 +210,7 @@ export default function Chat() {
           ))}
 
           {isTyping && (
-            <div className="self-start bg-white border rounded-2xl rounded-tl-sm px-4 py-3 text-sm">
+            <div className="self-start bg-white border rounded-2xl rounded-tl-sm px-4 py-3 text-sm dark:bg-stone-800 dark:border-stone-700">
               Typing...
             </div>
           )}
@@ -203,16 +219,18 @@ export default function Chat() {
         </div>
 
         {/* Input */}
-        <div className="bg-white border-t px-3 sm:px-4 md:px-5 py-2 sm:py-3 flex gap-1.5 sm:gap-2">
+        <div className="bg-white border-t px-3 sm:px-4 md:px-5 py-2 sm:py-3 flex gap-1.5 sm:gap-2 dark:bg-stone-800">
           <input
             type="text"
-            className="flex-1 px-3 sm:px-4 py-2 sm:py-3 rounded-lg border bg-gray-50 focus:bg-white focus:border-red-900 outline-none text-xs sm:text-sm min-w-0"
+            className="flex-1 dark:bg-stone-800 dark:border-stone-600 dark:text-white px-3 sm:px-4 py-2 sm:py-3 rounded-lg border bg-gray-50 focus:bg-white focus:border-red-900 outline-none text-xs sm:text-sm min-w-0"
             placeholder="Ask anything..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && sendMessage(input)}
           />
-          <button className="px-2 sm:px-3 py-2 sm:py-3 border rounded-lg text-sm">🎙️</button>
+          <button className="px-2 sm:px-3 py-2 sm:py-3 border rounded-lg text-sm">
+            🎙️
+          </button>
           <button
             onClick={() => sendMessage(input)}
             className="px-3 sm:px-5 py-2 sm:py-3 bg-red-900 hover:bg-red-700 text-white rounded-lg font-bold text-xs sm:text-sm whitespace-nowrap"

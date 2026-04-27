@@ -3,10 +3,11 @@ import { useState } from 'react'
 import { Moon, Sun, Bell, LogIn, LogOut, Menu } from 'lucide-react'
 import { useTheme } from './ThemeProvider'
 import NotificationPanel from './NotificationPanel'
+import Link from 'next/link'
 
 export default function Header({setSidebarOpen, sidebarOpen}:{setSidebarOpen: (open: boolean) => void, sidebarOpen: boolean}) {
   const { theme, toggle } = useTheme()
-  const [loggedIn, setLoggedIn] = useState(false)
+  const [loggedIn, setLoggedIn] = useState(true)
   const [notifOpen, setNotifOpen] = useState(false)
 
   return (
@@ -52,7 +53,8 @@ export default function Header({setSidebarOpen, sidebarOpen}:{setSidebarOpen: (o
               text-white bg-[#800000] hover:bg-[#a01010] transition whitespace-nowrap">
             {loggedIn ? (
               <>
-                <LogOut size={14} /> <span className="hidden sm:inline">Sign Out</span>
+              <Link href="/login" className='flex items-center gap-2'><LogOut size={14} /> <span className="hidden sm:inline">Sign Out</span></Link>
+                
               </>
             ) : (
               <>

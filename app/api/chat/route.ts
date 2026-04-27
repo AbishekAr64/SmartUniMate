@@ -1,18 +1,44 @@
-import { NextRequest, NextResponse } from 'next/server'
-import Anthropic from '@anthropic-ai/sdk'
+import { NextResponse } from "next/server";
+import { GoogleGenAI } from "@google/genai";
 
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+const ai = new GoogleGenAI({});
+export async function POST(req: Request) {
+  try {
+    const { message } = await req.json();
 
-export async function POST(req: NextRequest) {
-  const { messages, system } = await req.json()
+    const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
-  const response = await client.messages.create({
-    model: 'claude-sonnet-4-20250514',
-    max_tokens: 1024,
-    system,
-    messages,
-  })
+    if (!GEMINI_API_KEY) {
+      return NextResponse.json({
+        reply: "Missing Gemini API key in .env.local",
+      });
+    }
+ const response = await ai.models.generateContent({
+    model: "gemini-3.1-pro-preview",
+    contents:[
+            {
+              role: "user",
+              parts: [{ text: message }],
+            },
+          ]
 
-  const text = response.content.find(b => b.type === 'text')?.text ?? ''
-  return NextResponse.json({ content: text })
+   
+        });
+        const data = response.text;
+
+    console.log("Gemini response:", JSON.stringify(data, null, 2)); // 👈 DEBUG
+
+    const reply =
+      data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    return NextResponse.json({
+      reply: reply || "No response generated from Gemini.",
+    });
+  } catch (error: any) {
+    console.error("API ERROR:", error);
+
+    return NextResponse.json({
+      reply: "Server error while calling Gemini API.",
+    });
+  }
 }

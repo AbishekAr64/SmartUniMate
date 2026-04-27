@@ -20,3 +20,14 @@
     color-scheme: dark;
   }
 }
+
+/* Broad dark-mode utility fallbacks for elements that forgot `dark:` variants */
+@layer utilities {
+  html.dark .bg-white { @apply bg-stone-900; }
+  html.dark .bg-gray-50 { @apply bg-stone-950; }
+  html.dark .text-gray-900 { @apply text-stone-100; }
+  html.dark .text-gray-600 { @apply text-stone-300; }
+  html.dark .border-gray-200 { @apply border-stone-800; }
+  html.dark .border-gray-300 { @apply border-stone-700; }
+  html.dark .bg-red-50 { @apply bg-stone-900/40; }
+}

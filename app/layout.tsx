@@ -19,6 +19,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${dmSans.variable} ${playfair.variable} font-sans`}>
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function(){
+            try{
+              var saved = localStorage.getItem('susl_theme');
+              if(saved === 'dark') document.documentElement.classList.add('dark');
+              else if(saved === 'light') document.documentElement.classList.remove('dark');
+              else if(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.classList.add('dark');
+            }catch(e){}
+          })();
+        `}} />
         {children}
       </body>
     </html>

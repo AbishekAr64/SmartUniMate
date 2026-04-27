@@ -147,7 +147,7 @@ export default function News() {
           {filtered.map((item) => (
             <div
               key={item.id}
-              className="bg-white rounded-xl shadow-sm overflow-hidden flex flex-col sm:flex-row hover:shadow-md transition"
+              className="bg-white rounded-xl shadow-sm overflow-hidden flex flex-col sm:flex-row hover:shadow-md transition w-full"
             >
               <div
                 className={`sm:w-32 flex items-center justify-center text-4xl p-6 border-b sm:border-b-0 sm:border-r ${item.accent}`}

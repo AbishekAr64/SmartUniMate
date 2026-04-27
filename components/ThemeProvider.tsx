@@ -1,4 +1,5 @@
 'use client'
+
 import { createContext, useContext, useEffect, useState } from 'react'
 
 type Theme = 'light' | 'dark'
@@ -8,36 +9,25 @@ const ThemeCtx = createContext<{ theme: Theme; toggle: () => void }>({
 })
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('light')
-  const [mounted, setMounted] = useState(false)
+  const [theme, setTheme] = useState<Theme>(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        const saved = localStorage.getItem('susl_theme') as Theme | null
+        if (saved) return saved
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark'
+      }
+    } catch (e) {}
+    return 'light'
+  })
 
   useEffect(() => {
-    setMounted(true)
-    const saved = localStorage.getItem('susl_theme') as Theme
-    if (saved) {
-      setTheme(saved)
-      document.documentElement.classList.toggle('dark', saved === 'dark')
-    } else {
-      // Check system preference
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-      if (prefersDark) {
-        setTheme('dark')
-        document.documentElement.classList.add('dark')
-      }
-    }
-  }, [])
+    try {
+      document.documentElement.classList.toggle('dark', theme === 'dark')
+      localStorage.setItem('susl_theme', theme)
+    } catch (e) {}
+  }, [theme])
 
-  const toggle = () => {
-    const next = theme === 'light' ? 'dark' : 'light'
-    setTheme(next)
-    localStorage.setItem('susl_theme', next)
-    document.documentElement.classList.toggle('dark', next === 'dark')
-  }
-
-  // Prevent hydration mismatch
-  if (!mounted) {
-    return <>{children}</>
-  }
+  const toggle = () => setTheme((t) => (t === 'light' ? 'dark' : 'light'))
 
   return <ThemeCtx.Provider value={{ theme, toggle }}>{children}</ThemeCtx.Provider>
 }
