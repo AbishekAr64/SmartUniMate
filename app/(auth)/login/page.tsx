@@ -12,25 +12,35 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const mockUser = {
-    email: 'admin@smartuni.com',
-    password: '123456'
-  }
-
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError('')
 
-    setTimeout(() => {
-      setLoading(false)
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      })
 
-      if (email === mockUser.email && password === mockUser.password) {
-        router.push('/')
-      } else {
-        setError('Invalid email or password')
+      const data = await response.json()
+
+      if (!response.ok) {
+        // Displays exact message from database checking route
+        throw new Error(data.error || 'Invalid credentials or unauthorized account')
       }
-    }, 800)
+
+      // Successful login! Route handler automatically attached the Secure HTTP-only cookie.
+      router.push('/')
+      router.refresh() 
+    } catch (err: any) {
+      setError(err.message || 'Something went wrong. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -45,10 +55,10 @@ export default function LoginPage() {
             </div>
           </div>
           <h1 className="text-lg sm:text-xl font-bold text-stone-800 dark:text-stone-100">
-            Smart Uni Mate Login
+            Smart Uni Mate Student Login
           </h1>
           <p className="text-[11px] sm:text-xs text-stone-500 mt-1">
-            Sign in to continue
+            Sign in with your registered university credentials
           </p>
         </div>
 
@@ -58,14 +68,15 @@ export default function LoginPage() {
           {/* Email */}
           <div>
             <label className="text-[11px] sm:text-xs text-stone-600 dark:text-stone-300">
-              Email
+              University Email Address
             </label>
             <div className="flex items-center mt-1 gap-2 px-2 sm:px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800">
               <User size={16} />
               <input
                 type="email"
+                required
                 className="w-full bg-transparent outline-none text-xs sm:text-sm"
-                placeholder="admin@smartuni.com"
+                placeholder="student@uni.ac.lk"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -81,17 +92,20 @@ export default function LoginPage() {
               <Lock size={16} />
               <input
                 type="password"
+                required
                 className="w-full bg-transparent outline-none text-xs sm:text-sm"
-                placeholder="123456"
+                placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
           </div>
 
-          {/* Error */}
+          {/* Error Feedbacks */}
           {error && (
-            <p className="text-[11px] sm:text-xs text-red-500">{error}</p>
+            <div className="p-3 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 rounded-xl">
+              <p className="text-[11px] sm:text-xs text-red-600 dark:text-red-400 font-medium">{error}</p>
+            </div>
           )}
 
           {/* Button */}
@@ -101,14 +115,9 @@ export default function LoginPage() {
             className="w-full flex items-center justify-center gap-2 bg-[#800000] hover:bg-[#660000] text-white text-xs sm:text-sm py-2.5 rounded-xl transition disabled:opacity-60"
           >
             <LogIn size={16} />
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? 'Verifying Student Identity...' : 'Sign In'}
           </button>
         </form>
-
-        {/* Footer hint */}
-        <p className="text-[10px] sm:text-[11px] text-center text-stone-500 mt-4">
-          Demo: admin@smartuni.com / 123456
-        </p>
       </div>
     </div>
   )

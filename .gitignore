@@ -7,3 +7,6 @@ node_modules
 
 
 vis-screenshots
+/app/generated/prisma
+
+/app/generated/prisma

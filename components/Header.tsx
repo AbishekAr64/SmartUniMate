@@ -48,7 +48,10 @@ export default function Header({setSidebarOpen, sidebarOpen}:{setSidebarOpen: (o
           </button>
 
           <button
-            onClick={() => setLoggedIn(l => !l)}
+            onClick={async () => {
+                await fetch('/api/auth/logout', { method: 'POST' })  
+              setLoggedIn(l => !l)}
+            }
             className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 h-[32px] sm:h-[34px] rounded-lg text-xs sm:text-sm font-semibold
               text-white bg-[#800000] hover:bg-[#a01010] transition whitespace-nowrap">
             {loggedIn ? (
