@@ -2,11 +2,10 @@ node_modules
 
 .next
 
-.env
-.env.*
 
 
 vis-screenshots
 /app/generated/prisma
 
 /app/generated/prisma
+config.bat
