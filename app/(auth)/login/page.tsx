@@ -17,30 +17,7 @@ export default function LoginPage() {
     setLoading(true)
     setError('')
 
-    try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        // Displays exact message from database checking route
-        throw new Error(data.error || 'Invalid credentials or unauthorized account')
-      }
-
-      // Successful login! Route handler automatically attached the Secure HTTP-only cookie.
-      router.push('/')
-      router.refresh() 
-    } catch (err: any) {
-      setError(err.message || 'Something went wrong. Please try again.')
-    } finally {
-      setLoading(false)
-    }
+  router.push("/")
   }
 
   return (

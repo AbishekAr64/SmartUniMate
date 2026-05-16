@@ -13,25 +13,9 @@ interface StudentProfile {
 
 export default function HomePage() {
   const [profile, setProfile] = useState<StudentProfile | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
-    async function fetchSessionProfile() {
-      try {
-        // Fetches data of the currently authenticated session user
-        const res = await fetch('/api/auth/me')
-        if (res.ok) {
-          const data = await res.json()
-          setProfile(data.student)
-        }
-      } catch (error) {
-        console.error("Failed to retrieve user session profile:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchSessionProfile()
-  }, [])
+  
 
   // Quick fallback layout to prevent layout shifting during database lookup
   if (loading) {

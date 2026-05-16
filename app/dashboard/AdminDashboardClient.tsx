@@ -25,28 +25,7 @@ export default function AdminDashboardClient() {
   const [message, setMessage] = useState({ text: '', isError: false })
   const [loading, setLoading] = useState(false)
 
-  // Fetch registered student records
-  useEffect(() => {
-    async function loadStudents() {
-      try {
-        const res = await fetch('/api/admin/register-student')
-        if (!res.ok) throw new Error('Failed to fetch student database records')
-        
-        const json = await res.json() 
-        if (json && Array.isArray(json.students)) {
-          const formatted = json.students.map((student: any) => ({
-            ...student,
-            // Fallback default format layout logic
-            joinedDate: student.joinedDate ? new Date(student.joinedDate).toLocaleDateString() : 'N/A'
-          }))
-          setStudents(formatted)
-        }
-      } catch (e) {
-        console.error("Dashboard table population load error:", e)
-      }
-    }
-    loadStudents()
-  }, [])
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -57,43 +36,10 @@ export default function AdminDashboardClient() {
     e.preventDefault()
     setLoading(true)
     setMessage({ text: '', isError: false })
-
-    try {
-      const response = await fetch('/api/admin/register-student', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      })
-
-      const data = await response.json()
-      if (!response.ok) throw new Error(data.error || 'Registration failed.')
-
-      // Format current timestamp dynamically for smooth local table updating
-      const formattedStudent = {
-        ...data.student,
-        id: data.student.id || Math.random().toString(36).substr(2, 9),
-        joinedDate: data.student.joinedDate ? new Date(data.student.joinedDate).toLocaleDateString() : new Date().toLocaleDateString()
-      }
-
-      setStudents((prev) => [formattedStudent, ...prev])
-      setFormData({ name: '', password: '', faculty: '', department: '', uniId: '', uniEmail: '' })
-      setMessage({ text: 'Student registered successfully in the database!', isError: false })
-    } catch (err: any) {
-      setMessage({ text: err.message, isError: true })
-    } finally {
-      setLoading(false)
-    }
   }
 
   const handleLogout = async () => {
-    try {
-      await fetch('/api/admin-logout', { method: 'POST' })
-    } catch (err) {
-      console.error("Logout runtime clearing error:", err)
-    } finally {
-      router.push('/dashboard/login')
-      router.refresh()
-    }
+    router.push('/dashboard/login')
   }
 
   return (
